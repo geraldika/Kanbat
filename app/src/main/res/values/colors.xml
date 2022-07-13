@@ -1,22 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright 2018 Google LLC
-  ~
-  ~ Licensed under the Apache License, Version 2.0 (the "License");
-  ~ you may not use this file except in compliance with the License.
-  ~ You may obtain a copy of the License at
-  ~
-  ~     https://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  -->
-
 <resources>
-  <color name="colorPrimary">#3F51B5</color>
-  <color name="colorPrimaryDark">#303F9F</color>
-  <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">#2a9d8f</color>
+    <color name="colorPrimaryDark">#264653</color>
+    <color name="colorAccent">#2a9d8f</color>
+
+    <color name="colorTertiary">#e76f51</color>
+    <color name="backgroundPrimary">#ffffff</color>
+
+    <color name="textColorPrimary">#212529</color>
+    <color name="textColorSecondary">#343a40</color>
+    <color name="textColorTertiary">#6c757d</color>
+
+    <color name="colorInactiveIcons">#ced4da</color>
+
+    <color name="colorInProgress">#6a994e</color>
+
+    <color name="colorWhite">#ffffff</color>
+
+    <array name="colorsTasksBackground">
+        <item>#80e8e9ed</item>
+        <item>#80f8ffe5</item>
+        <item>#80f8f4e3</item>
+        <item>#80faf0ca</item>
+        <item>#80eff6e0</item>
+        <item>#80cdeac0</item>
+        <item>#80f4f1de</item>
+        <item>#80ece4db</item>
+        <item>#80e8e8e4</item>
+        <item>#80faedcd</item>
+        <item>#80fdfcdc</item>
+        <item>#80edede9</item>
+        <item>#80fefae0</item>
+        <item>#80e2e8dd</item>
+        <item>#80f3ffe1</item>
+        <item>#80ffe5d9</item>
+        <item>#80eae4e9</item>
+        <item>#80e9edc9</item>
+        <item>#80f5ebe0</item>
+        <item>#80e3d5ca</item>
+        <item>#80ccd5ae</item>
+    </array>
 </resources>
+
+    <!--    e9c46a-->
+    <!--    e76f51-->
+

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.kanbat.ui.home.HomeFragment"
+        android:label="@string/title_home" />
+
+    <dialog
+        android:id="@+id/navigation_add_task"
+        android:name="com.kanbat.ui.addtask.AddTaskFragment"
+        android:label="AddTaskFragment">
+        <argument
+            android:name="KEY_DESK_ID"
+            app:argType="long"
+            app:nullable="false" />
+    </dialog>
+
+    <dialog
+        android:id="@+id/navigation_create_desk"
+        android:name="com.kanbat.ui.home.createdesk.CreateDeskFragment"
+        android:label="CreateDeskFragment" />
+
+    <!--    <fragment-->
+    <!--        android:id="@+id/navigation_add_task"-->
+    <!--        android:name="com.kanbat.ui.addtask.AddTaskFragment"-->
+    <!--        android:label="@string/title_add_task"/>-->
+
+    <!--        <argument-->
+    <!--            android:name="system_ids"-->
+    <!--            app:argType="string[]"-->
+    <!--            app:nullable="false" />-->
+
+    <!--    </fragment>-->
+
+</navigation>
