@@ -26,3 +26,8 @@ data class Task(
     @SerializedName("timeDoneAt")
     val timeDoneAt: Long
 )
+
+sealed class TaskState(val state: Int) {
+    object Created : TaskState(0)
+    object Done : TaskState(1)
+}

@@ -23,7 +23,7 @@
         android:src="@drawable/ic_add_desk"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:tint="@color/colorPrimary" />
+        app:tint="@color/colorIconsPrimary" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
@@ -39,9 +39,8 @@
         app:tabMode="scrollable"
         app:tabPaddingEnd="@dimen/size_8dp"
         app:tabPaddingStart="@dimen/size_8dp"
-        app:tabSelectedTextColor="@color/textColorPrimary"
-        app:tabTextAppearance="@style/DeskTabLayoutTabText"
-        app:tabTextColor="@color/colorPrimaryDark" />
+        app:tabSelectedTextColor="@color/colorAccent"
+        app:tabTextColor="@color/textColorTertiary" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addTaskButton"
@@ -50,7 +49,8 @@
         android:layout_marginEnd="@dimen/size_16dp"
         android:layout_marginBottom="@dimen/size_64dp"
         android:src="@drawable/ic_add"
-        app:backgroundTint="@color/colorTertiary"
+        android:transitionName="addTaskButton"
+        app:backgroundTint="@color/colorAccent"
         app:fabSize="normal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

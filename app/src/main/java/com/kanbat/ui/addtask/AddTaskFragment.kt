@@ -1,25 +1,55 @@
 package com.kanbat.ui.addtask
 
-import android.app.ActionBar
 import android.content.Context
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
+import android.widget.EditText
+import android.widget.LinearLayout
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import androidx.transition.TransitionInflater
 import com.google.samples.gridtopager.R
 import com.google.samples.gridtopager.databinding.FragmentAddTaskBinding
-import com.kanbat.model.data.Task
+import com.kanbat.model.repository.DeskRepository
 import com.kanbat.model.repository.TaskRepository
-import com.kanbat.ui.base.BaseDialogFragment
+import com.kanbat.ui.base.BaseFragment
+import com.kanbat.utils.color
+import com.kanbat.viewmodel.AddTaskViewModel
 import dagger.android.support.AndroidSupportInjection
-import java.util.*
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class AddTaskFragment : BaseDialogFragment<FragmentAddTaskBinding>() {
+//task title
+//task points numbers and validation
+//transition
+class AddTaskFragment : BaseFragment<FragmentAddTaskBinding>() {
+
+    @Inject
+    lateinit var deskRepository: DeskRepository
 
     @Inject
     lateinit var tasksRepository: TaskRepository
 
     private val deskId by lazy { arguments?.getLong(KEY_DESK_ID) ?: 0L }
+
+    private val viewModel by lazy {
+        ViewModelProvider(
+            this,
+            AddTaskViewModel.Factory(deskId, deskRepository, tasksRepository)
+        )[AddTaskViewModel::class.java]
+    }
+
+    private val addTaskWatcher = object : TextWatcher {
+        override fun afterTextChanged(editable: Editable) = Unit
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            viewModel.taskText = s.toString().trim()
+        }
+    }
 
     override fun getViewBinding() = FragmentAddTaskBinding.inflate(layoutInflater)
 
@@ -28,44 +58,41 @@ class AddTaskFragment : BaseDialogFragment<FragmentAddTaskBinding>() {
         super.onAttach(context)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        dialog?.window?.attributes?.windowAnimations = R.style.SlideAnimation
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val addTaskViewModel = ViewModelProvider(
-            this,
-            AddTaskViewModel.Factory(tasksRepository)
-        )[AddTaskViewModel::class.java]
-
-        //todo mocked
-        addTaskViewModel.addTask(
-            Task(
-                0,
-                deskId,
-                UUID.randomUUID().toString(),
-                UUID.randomUUID().toString(),
-                3,
-                0,
-                emptyList(),
-                0L,
-                0L
-            )
-        )
-
         binding {
+            launch({
+                viewModel.desk.collectLatest {
+                    toolbarTitleView.text = it.title
+                }
+            })
 
+            launch({
+                viewModel.isTaskAdded.collectLatest { isTaskAdded ->
+                    if (isTaskAdded) onBackPressed()
+                }
+            })
+            launch({
+                viewModel.isEnabled.collectLatest { isEnabled ->
+                    addTaskButton.isEnabled = isEnabled
+                }
+            })
+
+            taskInputEditText.addTextChangedListener(addTaskWatcher)
+            addPointButton.setOnClickListener { addNewPointEditText() }
+            addTaskButton.setOnClickListener { viewModel.onAddTaskClicked() }
+            backButton.setOnClickListener { onBackPressed() }
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        dialog?.window?.attributes?.let { params ->
-            params.width = ActionBar.LayoutParams.MATCH_PARENT
-            params.height = ActionBar.LayoutParams.MATCH_PARENT
-            dialog?.window?.attributes = params
+    private fun addNewPointEditText() {
+        binding {
+            val pointEditText = EditText(context);
+            pointEditText.layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            pointsContainerLayout.addView(pointEditText)
         }
     }
 

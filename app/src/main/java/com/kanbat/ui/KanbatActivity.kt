@@ -10,7 +10,8 @@ import com.kanbat.ui.addtask.AddTaskFragment
 import com.kanbat.ui.base.BaseKanbatActivity
 import com.kanbat.ui.desk.DeskFragment
 import com.kanbat.ui.home.HomeFragment
-import com.kanbat.ui.home.createdesk.CreateDeskFragment
+import com.kanbat.ui.createdesk.CreateDeskFragment
+import com.kanbat.viewmodel.KanbatViewModel
 
 class KanbatActivity : BaseKanbatActivity() {
 

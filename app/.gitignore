@@ -1,1 +1,15 @@
+.gradle/
+/local.properties
+.idea/
+null/
 /build
+*/build/
+.idea/**
+.gradle/**
+captures/**
+build/**
+tools/encoder/build
+tools/encoder/build/**
+local.properties
+**/*.iml
+**/*.orig

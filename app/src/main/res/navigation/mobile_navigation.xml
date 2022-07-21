@@ -7,9 +7,9 @@
     <fragment
         android:id="@+id/navigation_home"
         android:name="com.kanbat.ui.home.HomeFragment"
-        android:label="@string/title_home" />
+        android:label="@string/str_title_home" />
 
-    <dialog
+    <fragment
         android:id="@+id/navigation_add_task"
         android:name="com.kanbat.ui.addtask.AddTaskFragment"
         android:label="AddTaskFragment">
@@ -17,23 +17,10 @@
             android:name="KEY_DESK_ID"
             app:argType="long"
             app:nullable="false" />
-    </dialog>
+    </fragment>
 
     <dialog
         android:id="@+id/navigation_create_desk"
-        android:name="com.kanbat.ui.home.createdesk.CreateDeskFragment"
+        android:name="com.kanbat.ui.createdesk.CreateDeskFragment"
         android:label="CreateDeskFragment" />
-
-    <!--    <fragment-->
-    <!--        android:id="@+id/navigation_add_task"-->
-    <!--        android:name="com.kanbat.ui.addtask.AddTaskFragment"-->
-    <!--        android:label="@string/title_add_task"/>-->
-
-    <!--        <argument-->
-    <!--            android:name="system_ids"-->
-    <!--            app:argType="string[]"-->
-    <!--            app:nullable="false" />-->
-
-    <!--    </fragment>-->
-
 </navigation>

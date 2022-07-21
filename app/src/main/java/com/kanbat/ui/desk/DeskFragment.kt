@@ -5,15 +5,15 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.samples.gridtopager.databinding.FragmentDeskBinding
 import com.kanbat.model.repository.DeskRepository
 import com.kanbat.model.repository.TaskRepository
 import com.kanbat.ui.base.BaseFragment
+import com.kanbat.utils.or
+import com.kanbat.viewmodel.DeskViewModel
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class DeskFragment : BaseFragment<FragmentDeskBinding>() {
@@ -24,8 +24,13 @@ class DeskFragment : BaseFragment<FragmentDeskBinding>() {
     @Inject
     lateinit var tasksRepository: TaskRepository
 
-    private val deskId by lazy {
-        arguments?.getLong(KEY_DESK_ID) ?: 0L
+    private val deskId by lazy { arguments?.getLong(KEY_DESK_ID).or(0L) }
+
+    private val viewModel by lazy {
+        ViewModelProvider(
+            this,
+            DeskViewModel.Factory(deskId, deskRepository, tasksRepository)
+        )[DeskViewModel::class.java]
     }
 
     private val adapter by lazy { TasksAdapter() }
@@ -39,31 +44,6 @@ class DeskFragment : BaseFragment<FragmentDeskBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initView()
-
-        val deskViewModel = ViewModelProvider(
-            this,
-            DeskViewModel.Factory(deskId, deskRepository, tasksRepository)
-        )[DeskViewModel::class.java]
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            deskViewModel
-                .getTasks()
-                .collectLatest(adapter::submitData)
-        }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            deskViewModel
-                .getDesk()
-                .collectLatest { desk ->
-                    binding {
-                        toolbarTitleView.text = desk.title
-                    }
-                }
-        }
-    }
-
-    private fun initView() {
         binding {
             val gridLayoutManager = StaggeredGridLayoutManager(
                 2,
@@ -72,10 +52,24 @@ class DeskFragment : BaseFragment<FragmentDeskBinding>() {
             recyclerView.layoutManager = gridLayoutManager
             recyclerView.adapter = adapter
 
-            filterButton.setOnClickListener {
-
-            }
+            filterButton.setOnClickListener {}
         }
+
+        launch({
+            viewModel
+                .desks
+                .collectLatest(adapter::submitData)
+        })
+
+        launch({
+            viewModel
+                .desk
+                .collectLatest {
+                    binding {
+                        toolbarTitleView.text = it.title
+                    }
+                }
+        })
     }
 
     companion object {
@@ -88,5 +82,4 @@ class DeskFragment : BaseFragment<FragmentDeskBinding>() {
 
     @dagger.Module
     class Module
-
 }

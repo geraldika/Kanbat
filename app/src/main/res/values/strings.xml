@@ -1,5 +1,11 @@
 <resources>
     <string name="app_name">Kanbat</string>
-    <string name="title_home">Kanbat</string>
-    <string name="title_add_task">Add task</string>
+    <string name="str_title_home">Kanbat</string>
+    <string name="str_title_add_task">Add task</string>
+    <string name="str_hint_input_task">Input task</string>
+    <string name="str_create_desk">Create new desk</string>
+    <string name="str_hint_input_desk">Input desk name..</string>
+    <string name="str_create_button">Create</string>
+    <string name="str_desk_is_created">Desk is created!</string>
+    <string name="str_save_button">Save</string>
 </resources>

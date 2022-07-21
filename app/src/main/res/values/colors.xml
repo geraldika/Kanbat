@@ -1,16 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#2a9d8f</color>
-    <color name="colorPrimaryDark">#264653</color>
-    <color name="colorAccent">#2a9d8f</color>
+    <color name="colorPrimary">#FFFFFF</color>
+    <color name="colorPrimaryDark">#127D5F</color>
+    <color name="colorAccent">#169873</color>
+    <color name="colorAccentAlpha15">#66169873</color>
+    <!--    #1CC495-->
+    <!--    #BEE3DB-->
+    <!--    #FAF9F9-->
+    <!--    e9c46a-->
+    <!--    e76f51-->
+    <color name="colorTransparent">#00ffffff</color>
 
     <color name="colorTertiary">#e76f51</color>
     <color name="backgroundPrimary">#ffffff</color>
 
     <color name="textColorPrimary">#212529</color>
     <color name="textColorSecondary">#343a40</color>
-    <color name="textColorTertiary">#6c757d</color>
+    <color name="textColorTertiary">#adb5bd</color>
 
+    <color name="colorIconsPrimary">#343a40</color>
+    <color name="colorIconsSecondary">#adb5bd</color>
     <color name="colorInactiveIcons">#ced4da</color>
 
     <color name="colorInProgress">#6a994e</color>
@@ -41,7 +50,4 @@
         <item>#80ccd5ae</item>
     </array>
 </resources>
-
-    <!--    e9c46a-->
-    <!--    e76f51-->
 

@@ -6,7 +6,6 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.samples.gridtopager.R
@@ -15,9 +14,9 @@ import com.kanbat.model.repository.DeskRepository
 import com.kanbat.ui.DeskViewPagerAdapter
 import com.kanbat.ui.addtask.AddTaskFragment
 import com.kanbat.ui.base.BaseFragment
+import com.kanbat.viewmodel.HomeViewModel
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class HomeFragment : BaseFragment<FragmentHomeBinding>() {
@@ -25,7 +24,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     @Inject
     lateinit var deskRepository: DeskRepository
 
-    private val viewPagerAdapter by lazy { DeskViewPagerAdapter(activity as AppCompatActivity) }
+    private val viewModel: HomeViewModel by lazy {
+        ViewModelProvider(
+            this,
+            HomeViewModel.Factory(deskRepository)
+        )[HomeViewModel::class.java]
+    }
 
     override fun getViewBinding() = FragmentHomeBinding.inflate(layoutInflater)
 
@@ -36,21 +40,17 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val homeViewModel = ViewModelProvider(
-            this,
-            HomeViewModel.Factory(deskRepository)
-        )[HomeViewModel::class.java]
-
         binding {
             addTaskButton.isVisible = false
+
+            val viewPagerAdapter = DeskViewPagerAdapter(activity as AppCompatActivity)
             viewPager.adapter = viewPagerAdapter
+            viewPager.isSaveEnabled = false
             TabLayoutMediator(
                 tabLayout,
                 viewPager
             ) { tab, position ->
-                //todo mocked
-                tab.text =
-                    "${viewPagerAdapter.items[position].id}-${viewPagerAdapter.items[position].title}"
+                tab.text = viewPagerAdapter.items[position].title
             }.apply {
                 attach()
             }
@@ -65,19 +65,24 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             createDeskButton.setOnClickListener {
                 this@HomeFragment.findNavController().navigate(R.id.navigation_create_desk)
             }
-        }
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            homeViewModel
-                .getAllDesks()
-                .collectLatest { desks ->
+            launch({
+                viewModel.desks.collectLatest { desks ->
                     binding {
                         viewPagerAdapter.items = desks
                         binding?.viewPager?.setCurrentItem(0, true)
                         addTaskButton.isVisible = desks.isNotEmpty()
                     }
                 }
+            })
         }
+    }
+
+    override fun onDestroyView() {
+        binding {
+            viewPager.adapter = null
+        }
+        super.onDestroyView()
     }
 
     @dagger.Module
@@ -85,16 +90,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
 }
 
-//todo
+//todo delete desk
+//todo delete task
+//todo delete point
+//todo points view
+//filter by states
 //pin code finger
-//flow
-//points
 //ads
-//font
-
 // icons process + filter
-// add btn
-
 //add -edit dialog fragment animation
-
-//delete desk task point

@@ -1,4 +1,4 @@
-package com.kanbat.ui
+package com.kanbat.viewmodel
 
 import android.content.Context
 import androidx.lifecycle.ViewModel

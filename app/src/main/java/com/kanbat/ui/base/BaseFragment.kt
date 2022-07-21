@@ -5,7 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
+import kotlinx.coroutines.launch
+import java.lang.Exception
 
 abstract class BaseFragment<VB : ViewBinding> : Fragment() {
 
@@ -21,7 +25,25 @@ abstract class BaseFragment<VB : ViewBinding> : Fragment() {
         return getViewBinding().also { binding = it }.root
     }
 
+    protected fun onBackPressed() {
+        findNavController().popBackStack()
+    }
+
     protected fun binding(viewBinding: VB.() -> Unit) {
         binding?.apply { viewBinding() }
     }
+
+    protected fun launch(
+        tryBlock: suspend (() -> Unit),
+        onStart: (() -> Unit)? = null,
+        onFailure: ((Throwable) -> Unit)? = null
+    ) {
+        onStart?.invoke()
+        try {
+            viewLifecycleOwner.lifecycleScope.launch { tryBlock.invoke() }
+        } catch (e: Throwable) {
+            onFailure?.invoke(e)
+        }
+    }
 }
+

@@ -13,7 +13,7 @@ class DeskLocalDataSource @Inject constructor(database: KanbatDatabase) {
 
     fun getAllDesks(): Flow<List<Desk>> = deskDao.getAllDesks()
 
-    fun getDeskById(id: Long) = deskDao.getDeskById(id)
+    fun getDeskById(id: Long): Flow<Desk> = deskDao.getDeskById(id)
 
     suspend fun deleteDesk(desk: Desk) = deskDao.delete(desk)
 

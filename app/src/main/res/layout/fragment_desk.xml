@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:elevation="@dimen/size_4dp"
             app:title="@string/app_name"
-            app:titleTextColor="@color/colorWhite">
+            app:titleTextColor="@color/textColorPrimary">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -32,13 +32,15 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/size_16dp"
                     android:ellipsize="end"
+                    android:fontFamily="@font/helvetica_bold"
                     android:lines="1"
-                    android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/textsize_medium"
+                    android:textColor="@color/textColorPrimary"
+                    android:textSize="@dimen/textsize_20sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/filterButton"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="Desk name" />
 
                 <ImageView
                     android:id="@+id/filterButton"
@@ -49,7 +51,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:tint="@color/colorWhite" />
+                    app:tint="@color/textColorTertiary" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

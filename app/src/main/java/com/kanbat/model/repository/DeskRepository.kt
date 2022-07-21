@@ -11,7 +11,7 @@ class DeskRepository @Inject constructor(private val deskLocalDataSource: DeskLo
 
     fun getAllDesks(): Flow<List<Desk>> = deskLocalDataSource.getAllDesks()
 
-    fun getDeskById(id: Long) = deskLocalDataSource.getDeskById(id)
+    fun getDeskById(id: Long): Flow<Desk> = deskLocalDataSource.getDeskById(id)
 
     suspend fun deleteDesk(desk: Desk) = deskLocalDataSource.deleteDesk(desk)
 }
