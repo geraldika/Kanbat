@@ -13,8 +13,10 @@ class DeskViewModel(
     private val taskRepository: TaskRepository
 ) : ViewModel() {
 
-    var desk = deskRepository.getDeskById(deskId)
-    var desks = taskRepository.getTasksByDeskId(deskId).cachedIn(viewModelScope)
+    private var deskFlow = deskRepository.getDeskById(deskId)
+    val desk get() = deskFlow
+    private var tasksFlow = taskRepository.getTasksByDeskId(deskId).cachedIn(viewModelScope)
+    val tasks get() = tasksFlow
 
     class Factory(
         private val deskId: Long,

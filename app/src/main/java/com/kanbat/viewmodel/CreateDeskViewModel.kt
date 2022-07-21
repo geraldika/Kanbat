@@ -1,16 +1,10 @@
 package com.kanbat.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.*
 import com.kanbat.model.data.Desk
 import com.kanbat.model.repository.DeskRepository
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.util.*
-import kotlin.coroutines.coroutineContext
 
 class CreateDeskViewModel(private val deskRepository: DeskRepository) :
     ViewModel() {

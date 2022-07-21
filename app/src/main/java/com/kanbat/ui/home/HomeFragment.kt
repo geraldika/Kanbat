@@ -94,8 +94,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 //todo delete task
 //todo delete point
 //todo points view
-//filter by states
+//filter by states, filter icons
 //pin code finger
 //ads
 // icons process + filter
 //add -edit dialog fragment animation
+//build variants
+//card colors depends on status

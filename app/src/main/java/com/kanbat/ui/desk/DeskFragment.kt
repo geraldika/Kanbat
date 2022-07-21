@@ -57,7 +57,7 @@ class DeskFragment : BaseFragment<FragmentDeskBinding>() {
 
         launch({
             viewModel
-                .desks
+                .tasks
                 .collectLatest(adapter::submitData)
         })
 
