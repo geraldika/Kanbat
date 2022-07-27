@@ -19,6 +19,20 @@
             app:nullable="false" />
     </fragment>
 
+    <fragment
+        android:id="@+id/navigation_edit_task"
+        android:name="com.kanbat.ui.edit.EditTaskFragment"
+        android:label="EditTaskFragment">
+        <argument
+            android:name="KEY_DESK_ID"
+            app:argType="long"
+            app:nullable="false" />
+        <argument
+            android:name="KEY_TASK_ID"
+            app:argType="long"
+            app:nullable="false" />
+    </fragment>
+
     <dialog
         android:id="@+id/navigation_create_desk"
         android:name="com.kanbat.ui.createdesk.CreateDeskFragment"

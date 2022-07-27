@@ -82,7 +82,9 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/size_16dp"
+            android:paddingEnd="@dimen/size_16dp">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/taskInputLayout"
@@ -94,6 +96,7 @@
                 android:textColorHint="@color/textColorTertiary"
                 app:boxBackgroundColor="@android:color/transparent"
                 app:boxBackgroundMode="none"
+                app:errorEnabled="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -105,31 +108,44 @@
                     android:layout_height="wrap_content"
                     android:imeOptions="actionNext"
                     android:inputType="textAutoCorrect|textMultiLine|textAutoComplete"
-                    android:maxLines="2"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp"
                     android:textColorHint="@color/textColorTertiary" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
+            <TextView
+                android:id="@+id/createCheckListTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:fontFamily="@font/helvetica"
+                android:lines="1"
+                android:text="@string/str_create_check_list"
+                android:textColor="@color/colorAccent"
+                android:textSize="@dimen/textsize_14sp"
+                app:layout_constraintBottom_toBottomOf="@+id/addPointButton"
+                app:layout_constraintEnd_toStartOf="@+id/addPointButton"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/addPointButton" />
 
             <ImageView
                 android:id="@+id/addPointButton"
                 android:layout_width="@dimen/size_40dp"
                 android:layout_height="@dimen/size_40dp"
-                android:layout_marginTop="@dimen/size_16dp"
-                android:layout_marginEnd="@dimen/size_8dp"
+                android:layout_marginTop="@dimen/size_24dp"
                 android:background="?attr/selectableItemBackground"
                 android:padding="@dimen/size_8dp"
                 android:src="@drawable/ic_add"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/taskInputLayout"
-                app:tint="@color/textColorPrimary" />
+                app:tint="@color/colorAccent" />
 
             <LinearLayout
                 android:id="@+id/pointsContainerLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="@dimen/size_16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/addPointButton" />

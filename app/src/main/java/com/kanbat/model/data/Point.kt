@@ -9,8 +9,9 @@ data class Point(
     @PrimaryKey(autoGenerate = true)
     @SerializedName("id")
     val id: Long,
-    val taskId: String,
     val text: String,
     val timeCreatedAt: Long,
     val timeDoneAt: Long
 )
+
+fun Point.isDone() = timeDoneAt > 0L

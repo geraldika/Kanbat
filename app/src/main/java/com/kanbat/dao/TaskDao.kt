@@ -12,6 +12,12 @@ interface TaskDao : BaseDao<Task> {
     @Query("SELECT * FROM Task")
     fun getAllTasks(): Flow<List<Task>>
 
+    @Query("SELECT * FROM Task WHERE id =:id")
+    fun getTaskById(id: Long): Flow<Task>
+
+    @Query("UPDATE Task SET state = :state WHERE id = :taskId")
+    suspend fun changeTaskState(taskId: Long, state: Int)
+
     @Query("SELECT * FROM Task WHERE deskId =:deskId")
     fun getTasksByDeskId(deskId: Long): PagingSource<Int, Task>
 

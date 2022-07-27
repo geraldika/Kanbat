@@ -11,22 +11,22 @@ import com.kanbat.ui.base.BaseKanbatActivity
 import com.kanbat.ui.desk.DeskFragment
 import com.kanbat.ui.home.HomeFragment
 import com.kanbat.ui.createdesk.CreateDeskFragment
+import com.kanbat.ui.edit.EditTaskFragment
 import com.kanbat.viewmodel.KanbatViewModel
 
 class KanbatActivity : BaseKanbatActivity() {
 
-    private var kanbatViewModel: KanbatViewModel? = null
+    private val kanbatViewModel: KanbatViewModel by lazy {
+        ViewModelProvider(
+            this,
+            KanbatViewModel.Factory(applicationContext)
+        )[KanbatViewModel::class.java]
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_kanbat)
         val navController = findNavController(R.id.nav_host_fragment)
-
-        kanbatViewModel = ViewModelProvider(
-            this,
-            KanbatViewModel.Factory(applicationContext)
-        )[KanbatViewModel::class.java]
-
     }
 
     @dagger.Module
@@ -46,5 +46,9 @@ class KanbatActivity : BaseKanbatActivity() {
         @PerFragment
         @ContributesAndroidInjector(modules = [AddTaskFragment.Module::class])
         abstract fun addTaskFragment(): AddTaskFragment
+
+        @PerFragment
+        @ContributesAndroidInjector(modules = [EditTaskFragment.Module::class])
+        abstract fun editTaskFragment(): EditTaskFragment
     }
 }

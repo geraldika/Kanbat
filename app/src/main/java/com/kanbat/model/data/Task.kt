@@ -1,8 +1,10 @@
 package com.kanbat.model.data
 
+import androidx.annotation.ColorRes
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
+import com.google.samples.gridtopager.R
 
 @Entity(tableName = "Task")
 data class Task(
@@ -27,7 +29,22 @@ data class Task(
     val timeDoneAt: Long
 )
 
-sealed class TaskState(val state: Int) {
-    object Created : TaskState(0)
-    object Done : TaskState(1)
+sealed class TaskState(val state: Int, @ColorRes val color: Int) {
+    object Created : TaskState(0, R.color.colorInProgress)
+    object Completed : TaskState(1, R.color.colorCompleted)
+    object Archived : TaskState(2, R.color.textColorSecondary)
+
+    companion object {
+        const val CREATED = 0
+        const val COMPLETED = 1
+        const val ARCHIVED = 2
+
+        fun getTaskStateByType(type: Int): TaskState {
+            return when (type) {
+                CREATED -> Created
+                COMPLETED -> Completed
+                else -> Archived
+            }
+        }
+    }
 }

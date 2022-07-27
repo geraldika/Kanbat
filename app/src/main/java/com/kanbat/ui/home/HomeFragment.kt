@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.tabs.TabLayoutMediator
@@ -30,6 +31,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             HomeViewModel.Factory(deskRepository)
         )[HomeViewModel::class.java]
     }
+    private val viewPagerAdapter by lazy { DeskViewPagerAdapter(activity as AppCompatActivity) }
+
+    private var selectedPageIndex = 0
 
     override fun getViewBinding() = FragmentHomeBinding.inflate(layoutInflater)
 
@@ -43,7 +47,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         binding {
             addTaskButton.isVisible = false
 
-            val viewPagerAdapter = DeskViewPagerAdapter(activity as AppCompatActivity)
             viewPager.adapter = viewPagerAdapter
             viewPager.isSaveEnabled = false
             TabLayoutMediator(
@@ -54,12 +57,26 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             }.apply {
                 attach()
             }
+            viewPager.post { viewPager.currentItem = selectedPageIndex }
 
             addTaskButton.setOnClickListener {
-                val id = viewPagerAdapter.items[viewPager.currentItem].id
-                val bundle = Bundle()
-                bundle.putLong(AddTaskFragment.KEY_DESK_ID, id)
-                this@HomeFragment.findNavController().navigate(R.id.navigation_add_task, bundle)
+                setFragmentResultListener(AddTaskFragment.REQUEST_KEY) { _, result ->
+                    (result[AddTaskFragment.KEY_DESK_ID] as? Long)?.let { deskId ->
+                        val pageIndex = deskId.toInt() - 1
+                        selectedPageIndex = if (pageIndex < viewPagerAdapter.items.size) {
+                            pageIndex
+                        } else {
+                            0
+                        }
+                    }
+                }
+                val b =
+                    AddTaskFragment.createArgument(viewPagerAdapter.items[viewPager.currentItem].id)
+
+                this@HomeFragment.findNavController().navigate(
+                    R.id.navigation_add_task,
+                    AddTaskFragment.createArgument(viewPagerAdapter.items[viewPager.currentItem].id)
+                )
             }
 
             createDeskButton.setOnClickListener {

@@ -37,21 +37,10 @@
                     android:textColor="@color/textColorPrimary"
                     android:textSize="@dimen/textsize_20sp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/filterButton"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="Desk name" />
-
-                <ImageView
-                    android:id="@+id/filterButton"
-                    android:layout_width="@dimen/size_32dp"
-                    android:layout_height="@dimen/size_32dp"
-                    android:layout_marginEnd="@dimen/size_16dp"
-                    android:src="@drawable/ic_archived"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:tint="@color/textColorTertiary" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

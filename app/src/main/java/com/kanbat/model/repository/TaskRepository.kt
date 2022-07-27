@@ -12,7 +12,12 @@ class TaskRepository @Inject constructor(private val taskLocalDataSource: TaskLo
 
     suspend fun addTask(task: Task) = taskLocalDataSource.insertTask(task)
 
+    suspend fun changeTaskState(taskId: Long, state: Int) = taskLocalDataSource
+        .changeTaskState(taskId, state)
+
     fun getAllTasks(): Flow<List<Task>> = taskLocalDataSource.getAllTasks()
+
+    fun getTaskById(id: Long): Flow<Task> = taskLocalDataSource.getTaskById(id)
 
     fun getTasksByDeskId(deskId: Long): Flow<PagingData<Task>> {
         return Pager(

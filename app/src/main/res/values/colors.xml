@@ -14,6 +14,8 @@
     <color name="colorTertiary">#e76f51</color>
     <color name="backgroundPrimary">#ffffff</color>
 
+    <color name="colorDark">#353535</color>
+
     <color name="textColorPrimary">#212529</color>
     <color name="textColorSecondary">#343a40</color>
     <color name="textColorTertiary">#adb5bd</color>
@@ -22,32 +24,33 @@
     <color name="colorIconsSecondary">#adb5bd</color>
     <color name="colorInactiveIcons">#ced4da</color>
 
-    <color name="colorInProgress">#6a994e</color>
+    <color name="colorCompleted">#6a994e</color>
+    <color name="colorInProgress">#38a3a5</color>
 
     <color name="colorWhite">#ffffff</color>
 
     <array name="colorsTasksBackground">
-        <item>#80e8e9ed</item>
-        <item>#80f8ffe5</item>
-        <item>#80f8f4e3</item>
-        <item>#80faf0ca</item>
-        <item>#80eff6e0</item>
-        <item>#80cdeac0</item>
-        <item>#80f4f1de</item>
-        <item>#80ece4db</item>
-        <item>#80e8e8e4</item>
-        <item>#80faedcd</item>
-        <item>#80fdfcdc</item>
-        <item>#80edede9</item>
-        <item>#80fefae0</item>
-        <item>#80e2e8dd</item>
-        <item>#80f3ffe1</item>
-        <item>#80ffe5d9</item>
-        <item>#80eae4e9</item>
-        <item>#80e9edc9</item>
-        <item>#80f5ebe0</item>
-        <item>#80e3d5ca</item>
-        <item>#80ccd5ae</item>
+        <item>#66e8e9ed</item>
+        <item>#66f8ffe5</item>
+        <item>#66f8f4e3</item>
+        <item>#66faf0ca</item>
+        <item>#66eff6e0</item>
+        <item>#66cdeac0</item>
+        <item>#66f4f1de</item>
+        <item>#66ece4db</item>
+        <item>#66e8e8e4</item>
+        <item>#66faedcd</item>
+        <item>#66fdfcdc</item>
+        <item>#66edede9</item>
+        <item>#66fefae0</item>
+        <item>#66e2e8dd</item>
+        <item>#66f3ffe1</item>
+        <item>#66ffe5d9</item>
+        <item>#66eae4e9</item>
+        <item>#66e9edc9</item>
+        <item>#66f5ebe0</item>
+        <item>#66e3d5ca</item>
+        <item>#66ccd5ae</item>
     </array>
 </resources>
 

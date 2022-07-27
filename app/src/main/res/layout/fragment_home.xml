@@ -48,7 +48,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/size_16dp"
         android:layout_marginBottom="@dimen/size_64dp"
-        android:src="@drawable/ic_add"
+        android:src="@drawable/ic_add_desk"
         android:transitionName="addTaskButton"
         app:backgroundTint="@color/colorAccent"
         app:fabSize="normal"

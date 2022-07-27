@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/containerLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="false"
+        android:fitsSystemWindows="true"
+        app:layout_constraintEnd_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="@dimen/size_4dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clickable="false">
+
+                <ImageView
+                    android:id="@+id/backButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_back"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="@color/colorIconsSecondary" />
+
+                <TextView
+                    android:id="@+id/toolbarTitleView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/size_16dp"
+                    android:layout_marginEnd="@dimen/size_16dp"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/helvetica_bold"
+                    android:lines="1"
+                    android:textColor="@color/textColorPrimary"
+                    android:textSize="@dimen/textsize_20sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/taskStateImageView"
+                    app:layout_constraintStart_toEndOf="@+id/backButton"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="Desk name" />
+
+                <ImageView
+                    android:id="@+id/taskStateImageView"
+                    android:layout_width="@dimen/size_36dp"
+                    android:layout_height="@dimen/size_36dp"
+                    android:layout_marginStart="@dimen/size_16dp"
+                    android:layout_marginEnd="@dimen/size_16dp"
+                    android:src="@drawable/ic_task_state"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/appBarLayout">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/taskLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/size_16dp"
+            android:paddingEnd="@dimen/size_16dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/taskInputEditText"
+                style="@style/KanbatTheme.TitleTextInputStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/size_16dp"
+                android:imeOptions="actionNext"
+                android:inputType="textAutoCorrect|textMultiLine|textAutoComplete"
+                android:paddingStart="0dp"
+                android:paddingEnd="0dp"
+                android:textColorHint="@color/textColorTertiary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <FrameLayout
+                android:id="@+id/editTaskLayout"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="@+id/taskInputEditText"
+                app:layout_constraintEnd_toEndOf="@+id/taskInputEditText"
+                app:layout_constraintStart_toStartOf="@+id/taskInputEditText"
+                app:layout_constraintTop_toTopOf="@+id/taskInputEditText" />
+
+            <LinearLayout
+                android:id="@+id/pointsContainerLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:clickable="false"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/taskInputEditText" />
+
+            <TextView
+                android:id="@+id/addPointButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/size_24dp"
+                android:ellipsize="end"
+                android:fontFamily="@font/helvetica"
+                android:lines="1"
+                android:text="@string/str_add_points_to_check_list"
+                android:textColor="@color/colorIconsSecondary"
+                android:textSize="@dimen/textsize_14sp"
+                app:drawableEndCompat="@drawable/ic_add"
+                app:drawableTint="@color/colorIconsSecondary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/pointsContainerLayout" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/completeFab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/size_24dp"
+        app:backgroundTint="@color/colorAccent"
+        app:fabSize="normal"
+        app:layout_constraintBottom_toTopOf="@+id/archiveFab"
+        app:layout_constraintEnd_toEndOf="@+id/archiveFab"
+        app:layout_constraintStart_toStartOf="@+id/archiveFab"
+        app:srcCompat="@drawable/ic_done" />
+
+    <TextView
+        android:id="@+id/completeTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/size_8dp"
+        android:text="@string/str_complete_task_button"
+        app:layout_constraintBottom_toBottomOf="@+id/completeFab"
+        app:layout_constraintEnd_toStartOf="@+id/completeFab"
+        app:layout_constraintTop_toTopOf="@+id/completeFab" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/archiveFab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/size_24dp"
+        app:backgroundTint="@color/colorAccent"
+        app:fabSize="normal"
+        app:layout_constraintBottom_toTopOf="@+id/changeStateFab"
+        app:layout_constraintEnd_toEndOf="@+id/changeStateFab"
+        app:layout_constraintStart_toStartOf="@+id/changeStateFab"
+        app:srcCompat="@drawable/ic_archive" />
+
+    <TextView
+        android:id="@+id/archiveTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/size_8dp"
+        android:text="@string/str_archive_task"
+        app:layout_constraintBottom_toBottomOf="@+id/archiveFab"
+        app:layout_constraintEnd_toStartOf="@+id/archiveFab"
+        app:layout_constraintTop_toTopOf="@+id/archiveFab" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/changeStateFab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginEnd="@dimen/size_16dp"
+        android:layout_marginBottom="@dimen/size_24dp"
+        android:src="@drawable/ic_open_menu"
+        app:backgroundTint="@color/colorAccent"
+        app:fabSize="normal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,17 +1,19 @@
 package com.kanbat.ui.base
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
 import kotlinx.coroutines.launch
-import java.lang.Exception
 
-abstract class BaseFragment<VB : ViewBinding> : Fragment() {
+abstract class BaseFragment<VB : ViewBinding> : Fragment(), MenuProvider {
 
     protected var binding: VB? = null
 
@@ -22,11 +24,18 @@ abstract class BaseFragment<VB : ViewBinding> : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return getViewBinding().also { binding = it }.root
+        return getViewBinding().also { binding = it }.root.apply {
+            val menuHost: MenuHost = requireActivity()
+            menuHost.addMenuProvider(this@BaseFragment, viewLifecycleOwner, Lifecycle.State.RESUMED)
+        }
     }
 
-    protected fun onBackPressed() {
-        findNavController().popBackStack()
+    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) = Unit
+
+    override fun onMenuItemSelected(menuItem: MenuItem): Boolean = false
+
+    protected open fun onBackPressed() {
+        findNavController().navigateUp()
     }
 
     protected fun binding(viewBinding: VB.() -> Unit) {
@@ -43,6 +52,14 @@ abstract class BaseFragment<VB : ViewBinding> : Fragment() {
             viewLifecycleOwner.lifecycleScope.launch { tryBlock.invoke() }
         } catch (e: Throwable) {
             onFailure?.invoke(e)
+        }
+    }
+
+    protected open fun initToolbar(toolbar: Toolbar) {
+        val activity = activity as AppCompatActivity
+        activity.setSupportActionBar(toolbar)
+        activity.supportActionBar?.let { actionBar ->
+            actionBar.setHomeButtonEnabled(true)
         }
     }
 }

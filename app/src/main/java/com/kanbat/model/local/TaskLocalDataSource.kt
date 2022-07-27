@@ -12,7 +12,11 @@ class TaskLocalDataSource @Inject constructor(private val database: KanbatDataba
 
     suspend fun insertTask(task: Task) = taskDao.insert(task)
 
+    suspend fun changeTaskState(taskId: Long, state: Int) = taskDao.changeTaskState(taskId, state)
+
     fun getAllTasks(): Flow<List<Task>> = taskDao.getAllTasks()
+
+    fun getTaskById(id: Long): Flow<Task> = taskDao.getTaskById(id)
 
     fun getTasksByDeskId(deskId: Long): PagingSource<Int, Task> = taskDao.getTasksByDeskId(deskId)
 

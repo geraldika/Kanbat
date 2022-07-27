@@ -7,10 +7,12 @@ import androidx.recyclerview.widget.DiffUtil
 import com.google.samples.gridtopager.databinding.LayoutTaskHolderBinding
 import com.kanbat.model.data.Task
 
-class TasksAdapter : PagingDataAdapter<Task, TaskHolder>(TASKS_COMPARATOR) {
+class TasksAdapter(
+    private val onItemClickListener: ((Task) -> Unit)
+) : PagingDataAdapter<Task, TaskHolder>(TASKS_COMPARATOR) {
 
     override fun onBindViewHolder(holder: TaskHolder, position: Int) {
-        getItem(position)?.let(holder::bind)
+        getItem(position)?.let { holder.bind(it, onItemClickListener) }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskHolder {

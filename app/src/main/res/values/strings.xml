@@ -8,4 +8,10 @@
     <string name="str_create_button">Create</string>
     <string name="str_desk_is_created">Desk is created!</string>
     <string name="str_save_button">Save</string>
+    <string name="str_create_check_list" >Create check list</string>
+    <string name="str_add_point">Please add point</string>
+    <string name="str_hint_edit_task">Task content</string>
+    <string name="str_add_points_to_check_list">Add check point</string>
+    <string name="str_complete_task_button">Complete</string>
+    <string name="str_archive_task">Archive</string>
 </resources>

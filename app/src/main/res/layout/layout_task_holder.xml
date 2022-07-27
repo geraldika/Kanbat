@@ -5,7 +5,7 @@
     android:id="@+id/containerCardView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:checkable="true"
+    android:layout_margin="@dimen/size_2dp"
     android:clickable="true"
     android:focusable="true"
     app:cardUseCompatPadding="true"
@@ -21,33 +21,31 @@
         android:paddingEnd="@dimen/size_8dp"
         android:paddingBottom="@dimen/size_8dp">
 
-        <com.kanbat.utils.TaskProgressView
-            android:id="@+id/taskProgressView"
-            android:layout_width="@dimen/size_16dp"
-            android:layout_height="@dimen/size_16dp"
-            android:layout_marginEnd="@dimen/size_8dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:visibility="gone"
-            app:layout_constraintStart_toStartOf="parent"
+        <ImageView
+            android:id="@+id/taskStateView"
+            android:layout_width="@dimen/size_8dp"
+            android:layout_height="@dimen/size_8dp"
+            android:layout_marginStart="@dimen/size_8dp"
+            android:src="@drawable/ic_rectangle"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/titleTextView"
+            android:id="@+id/taskTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:clickable="false"
             android:ellipsize="end"
-            android:maxLines="3"
-            android:textAlignment="textStart"
-            android:textColor="@color/textColorPrimary"
+            android:maxLines="16"
+            android:textColor="@color/textColorSecondary"
             android:textSize="@dimen/textsize_14sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/taskProgressView"
+            app:layout_constraintEnd_toStartOf="@+id/taskStateView"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="123" />
+            tools:text="capture.condenastdigital.com" />
 
         <TextView
-            android:id="@+id/descriptionTextView"
+            android:id="@+id/pointCountTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:clickable="false"
@@ -56,8 +54,8 @@
             android:textSize="@dimen/textsize_14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/titleTextView"
-            tools:text="capture.condenastdigital.com" />
+            app:layout_constraintTop_toBottomOf="@+id/taskTextView"
+            tools:text="2" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

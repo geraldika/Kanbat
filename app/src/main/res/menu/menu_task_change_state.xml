@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/completeItemView"
+        android:icon="@drawable/ic_done"
+        android:title="Completed"
+        app:iconTint="@color/colorAccent"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/archiveItemView"
+        android:icon="@drawable/ic_done"
+        android:title="Archive"
+        app:iconTint="@color/colorAccent"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/createItemView"
+        android:icon="@drawable/ic_done"
+        android:title="Recreate"
+        app:iconTint="@color/colorAccent"
+        app:showAsAction="never" />
+</menu>

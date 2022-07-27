@@ -7,25 +7,22 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
 import android.widget.LinearLayout
+import androidx.core.os.bundleOf
+import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
-import androidx.transition.TransitionInflater
 import com.google.samples.gridtopager.R
 import com.google.samples.gridtopager.databinding.FragmentAddTaskBinding
 import com.kanbat.model.repository.DeskRepository
 import com.kanbat.model.repository.TaskRepository
 import com.kanbat.ui.base.BaseFragment
-import com.kanbat.utils.color
+import com.kanbat.utils.or
 import com.kanbat.viewmodel.AddTaskViewModel
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-//task title
 //task points numbers and validation
-//transition
+//fragment transition
 class AddTaskFragment : BaseFragment<FragmentAddTaskBinding>() {
 
     @Inject
@@ -34,7 +31,7 @@ class AddTaskFragment : BaseFragment<FragmentAddTaskBinding>() {
     @Inject
     lateinit var tasksRepository: TaskRepository
 
-    private val deskId by lazy { arguments?.getLong(KEY_DESK_ID) ?: 0L }
+    private val deskId by lazy { arguments?.getLong(KEY_DESK_ID).or(0L) }
 
     private val viewModel by lazy {
         ViewModelProvider(
@@ -50,6 +47,8 @@ class AddTaskFragment : BaseFragment<FragmentAddTaskBinding>() {
             viewModel.taskText = s.toString().trim()
         }
     }
+
+    private val pointEditTexts = mutableListOf<EditText>()
 
     override fun getViewBinding() = FragmentAddTaskBinding.inflate(layoutInflater)
 
@@ -69,7 +68,10 @@ class AddTaskFragment : BaseFragment<FragmentAddTaskBinding>() {
 
             launch({
                 viewModel.isTaskAdded.collectLatest { isTaskAdded ->
-                    if (isTaskAdded) onBackPressed()
+                    if (isTaskAdded) {
+                        setFragmentResult(REQUEST_KEY, bundleOf(KEY_DESK_ID to deskId))
+                        onBackPressed()
+                    }
                 }
             })
             launch({
@@ -80,24 +82,35 @@ class AddTaskFragment : BaseFragment<FragmentAddTaskBinding>() {
 
             taskInputEditText.addTextChangedListener(addTaskWatcher)
             addPointButton.setOnClickListener { addNewPointEditText() }
-            addTaskButton.setOnClickListener { viewModel.onAddTaskClicked() }
+            addTaskButton.setOnClickListener { viewModel.onAddTaskClicked(pointEditTexts.map { it.text.toString() }) }
             backButton.setOnClickListener { onBackPressed() }
         }
     }
 
     private fun addNewPointEditText() {
         binding {
-            val pointEditText = EditText(context);
-            pointEditText.layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            )
-            pointsContainerLayout.addView(pointEditText)
+            if (pointEditTexts.isEmpty() || pointEditTexts.last().text.isNotEmpty()) {
+                val pointEditText = EditText(context)
+                pointEditText.layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                )
+                pointsContainerLayout.addView(pointEditText)
+                pointEditTexts.add(pointEditText)
+                pointEditText.requestFocus()
+            } else {
+                val emptyEditText = pointEditTexts.last()
+                emptyEditText.hint = context?.getString(R.string.str_add_point)
+                emptyEditText.requestFocus()
+            }
         }
     }
 
     companion object {
         const val KEY_DESK_ID = "KEY_DESK_ID"
+        const val REQUEST_KEY = "ADD_TASK_REQUEST_KEY"
+
+        fun createArgument(deskId: Long): Bundle = bundleOf(KEY_DESK_ID to deskId)
     }
 
     @dagger.Module

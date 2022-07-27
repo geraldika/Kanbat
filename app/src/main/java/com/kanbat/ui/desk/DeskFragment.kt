@@ -5,11 +5,14 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.google.samples.gridtopager.R
 import com.google.samples.gridtopager.databinding.FragmentDeskBinding
 import com.kanbat.model.repository.DeskRepository
 import com.kanbat.model.repository.TaskRepository
 import com.kanbat.ui.base.BaseFragment
+import com.kanbat.ui.edit.EditTaskFragment
 import com.kanbat.utils.or
 import com.kanbat.viewmodel.DeskViewModel
 import dagger.android.support.AndroidSupportInjection
@@ -33,7 +36,7 @@ class DeskFragment : BaseFragment<FragmentDeskBinding>() {
         )[DeskViewModel::class.java]
     }
 
-    private val adapter by lazy { TasksAdapter() }
+    private val adapter by lazy { TasksAdapter(onItemClickListener = viewModel::onTaskClicked) }
 
     override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)
@@ -51,8 +54,6 @@ class DeskFragment : BaseFragment<FragmentDeskBinding>() {
             )
             recyclerView.layoutManager = gridLayoutManager
             recyclerView.adapter = adapter
-
-            filterButton.setOnClickListener {}
         }
 
         launch({
@@ -68,6 +69,18 @@ class DeskFragment : BaseFragment<FragmentDeskBinding>() {
                     binding {
                         toolbarTitleView.text = it.title
                     }
+                }
+        })
+
+        launch({
+            viewModel
+                .selectedTask
+                .collectLatest { task ->
+                    findNavController()
+                        .navigate(
+                            R.id.navigation_edit_task,
+                            EditTaskFragment.createArgument(deskId, task.id)
+                        )
                 }
         })
     }
