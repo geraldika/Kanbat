@@ -4,24 +4,36 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.*
-import android.widget.LinearLayout
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import android.widget.TextView
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.MaterialTheme
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
+import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.google.samples.gridtopager.R
 import com.google.samples.gridtopager.databinding.FragmentEditTaskBinding
 import com.kanbat.model.data.TaskState
 import com.kanbat.model.repository.DeskRepository
+import com.kanbat.model.repository.PointRepository
 import com.kanbat.model.repository.TaskRepository
 import com.kanbat.ui.base.BaseFragment
+import com.kanbat.ui.home.HomeFragment
 import com.kanbat.utils.color
 import com.kanbat.utils.hideKeyboard
 import com.kanbat.utils.or
 import com.kanbat.utils.showKeyboard
+import com.kanbat.viewmodel.EditPointsViewModel
 import com.kanbat.viewmodel.EditTaskViewModel
 import dagger.android.support.AndroidSupportInjection
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 import javax.inject.Inject
 
@@ -33,6 +45,9 @@ class EditTaskFragment : BaseFragment<FragmentEditTaskBinding>(), View.OnClickLi
     @Inject
     lateinit var tasksRepository: TaskRepository
 
+    @Inject
+    lateinit var pointRepository: PointRepository
+
     private val deskId by lazy { arguments?.getLong(KEY_DESK_ID).or(0L) }
     private val taskId by lazy { arguments?.getLong(KEY_TASK_ID).or(0L) }
 
@@ -43,6 +58,13 @@ class EditTaskFragment : BaseFragment<FragmentEditTaskBinding>(), View.OnClickLi
         )[EditTaskViewModel::class.java]
     }
 
+    private val pointsVewModel by lazy {
+        ViewModelProvider(
+            this,
+            EditPointsViewModel.Factory(taskId, pointRepository)
+        )[EditPointsViewModel::class.java]
+    }
+
     private val addTaskWatcher = object : TextWatcher {
         override fun afterTextChanged(editable: Editable) = Unit
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
@@ -51,8 +73,6 @@ class EditTaskFragment : BaseFragment<FragmentEditTaskBinding>(), View.OnClickLi
         }
     }
 
-    private var pointViews = mutableListOf<PointView>()
-
     override fun getViewBinding() = FragmentEditTaskBinding.inflate(layoutInflater)
 
     override fun onAttach(context: Context) {
@@ -60,139 +80,157 @@ class EditTaskFragment : BaseFragment<FragmentEditTaskBinding>(), View.OnClickLi
         super.onAttach(context)
     }
 
+    @OptIn(
+        ExperimentalComposeUiApi::class,
+        ExperimentalFoundationApi::class,
+        ExperimentalMaterialApi::class,
+        ExperimentalCoroutinesApi::class
+    )
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding {
+            composeView.setContent {
+                MaterialTheme {
+                    EditPointsView(pointsVewModel)
+                }
+            }
+            initToolbar(toolbar)
+
+            taskInputEditText.setOnLongClickListener {
+                viewModel.onEditModeChanged()
+                true
+            }
+            taskInputEditText.addTextChangedListener(addTaskWatcher)
+
             launch({
-                viewModel.isEditMode.collectLatest { isEditMode ->
-                    setStateFabsVisibility(!isEditMode)
-                    taskInputEditText.isEnabled = isEditMode
-                    addPointButton.isVisible = isEditMode
-                    if (isEditMode) {
-                        taskInputEditText.requestFocus()
-                        taskInputEditText.setSelection(taskInputEditText.length())
-                        requireActivity().showKeyboard()
-                    } else {
-                        requireActivity().hideKeyboard()
+                viewModel.isEditModeUiState.collectLatest { isEditMode ->
+                    setTaskMenuEnabled(!isEditMode)
+                    with(taskInputEditText) {
+                        if (isEditMode) {
+                            requireActivity().showKeyboard()
+                            requestFocus()
+                            setSelection(length())
+                        } else {
+                            requireActivity().hideKeyboard()
+                            clearFocus()
+                        }
                     }
-                    editTaskLayout.isVisible = !isEditMode
                 }
             })
 
             launch({
-                viewModel.isChangeStateMode.collectLatest { isChangeStateMode ->
-                    archiveTextView.isVisible = isChangeStateMode
-                    completeTextView.isVisible = isChangeStateMode
-                    if (isChangeStateMode) {
-                        completeFab.show()
-                        archiveFab.show()
-                    } else {
-                        completeFab.hide()
-                        archiveFab.hide()
-                    }
+                viewModel.isTaskMenuVisibleUiState.collectLatest { (taskState, isVisible) ->
+                    if (isVisible) showTaskMenu(taskState) else hideTaskMenu()
                 }
             })
 
             launch({
-                viewModel.desk.collectLatest {
+                viewModel.deskUiState.collectLatest {
                     toolbarTitleView.text = it.title
                 }
             })
 
             launch({
-                viewModel.task.collectLatest { task ->
+                viewModel.taskUiState.collectLatest { task ->
                     taskInputEditText.setText(task.text, TextView.BufferType.EDITABLE)
                     taskStateImageView.setColorFilter(
-                        requireActivity().color(TaskState.getTaskStateByType(task.state).color),
-                        android.graphics.PorterDuff.Mode.MULTIPLY
+                        requireActivity().color(TaskState.getTaskStateByType(task.state).color)
                     )
-                    task.points.forEach { point ->
-                        pointViews.clear()
-                        createPointView().setPoint(point)
-                    }
                 }
             })
 
             launch({
-                viewModel.isTaskEdited.collectLatest { isTaskAdded ->
-                    if (isTaskAdded) {
-                        onBackPressed()
-                    }
-                }
-            })
-            launch({
-                viewModel.isEnabled.collectLatest { isEnabled ->
+                viewModel.isOnBackPressedUiState.collectLatest {
+                    setFragmentResult(
+                        HomeFragment.REQUEST_KEY,
+                        bundleOf(HomeFragment.KEY_DESK_ID to deskId)
+                    )
+                    findNavController().navigateUp()
                 }
             })
 
-            taskInputEditText.addTextChangedListener(addTaskWatcher)
-
-            addPointButton.setOnClickListener(this@EditTaskFragment)
             taskLayout.setOnClickListener(this@EditTaskFragment)
-
             changeStateFab.setOnClickListener(this@EditTaskFragment)
             completeFab.setOnClickListener(this@EditTaskFragment)
+            inProgressFab.setOnClickListener(this@EditTaskFragment)
             archiveFab.setOnClickListener(this@EditTaskFragment)
-
             backButton.setOnClickListener(this@EditTaskFragment)
-
-            editTaskLayout.setOnLongClickListener {
-                viewModel.onEditModeChanged(true)
-                true
-            }
         }
     }
 
     override fun onClick(view: View) {
         when (view.id) {
-            R.id.addPointButton -> addNewPoint()
-            R.id.taskLayout -> viewModel.onEditModeChanged(false)
-            R.id.changeStateFab -> viewModel.onStateChangeClicked()
-            R.id.completeFab -> viewModel.onCompleteTaskClicked()
-            R.id.archiveFab -> viewModel.onArchiveTaskClicked()
+            R.id.taskLayout -> viewModel.onEditModeChanged()
+            R.id.changeStateFab -> viewModel.onTaskMenuClicked()
+            R.id.inProgressFab -> viewModel.onChangeTaskStateClicked(TaskState.InProgress)
+            R.id.completeFab -> viewModel.onChangeTaskStateClicked(TaskState.Completed)
+            R.id.archiveFab -> viewModel.onChangeTaskStateClicked(TaskState.Archived)
             R.id.backButton -> onBackPressed()
         }
     }
 
-//    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-//        menuInflater.inflate(R.menu.menu_task_change_state, menu)
-//    }
-//
-//    override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-//        return when (menuItem.itemId) {
-//            R.id.completeItemView -> {
-//                true
-//            }
-//            else -> false
-//        }
-//    }
-
-    private fun createPointView(): PointView {
-        val pointView = PointView(requireContext())
-        pointView.layoutParams = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT
-        )
-        binding?.pointsContainerLayout?.addView(pointView)
-        pointViews.add(pointView)
-        return pointView
+    override fun onBackPressed() {
+        viewModel.onBackAction()
     }
 
-    private fun addNewPoint() {
+    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+        menuInflater.inflate(R.menu.menu_edit_task, menu)
+    }
+
+    override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+        return when (menuItem.itemId) {
+            R.id.deleteItemView -> {
+                viewModel.onDeleteTaskClicked()
+                true
+            }
+            else -> false
+        }
+    }
+
+    private fun setTaskMenuEnabled(isEnabled: Boolean) {
+        binding?.changeStateFab?.isVisible = isEnabled
+        if (!isEnabled) hideTaskMenu()
+    }
+
+    private fun showTaskMenu(state: TaskState) {
         binding {
-            if (pointViews.isEmpty() || pointViews.last().text.isNotEmpty()) {
-                createPointView().requestFocus()
-            } else {
-                pointViews.last().requestPointViewFocus()
+            when (state) {
+                TaskState.InProgress -> {
+                    completeFab.show()
+                    archiveFab.show()
+                    inProgressFab.isVisible = false
+                    inProgressTextView.isVisible = false
+                    completeTextView.isVisible = true
+                    archiveTextView.isVisible = true
+                }
+                TaskState.Completed -> {
+                    inProgressFab.show()
+                    archiveFab.show()
+                    completeFab.isVisible = false
+                    inProgressTextView.isVisible = true
+                    completeTextView.isVisible = false
+                    archiveTextView.isVisible = true
+                }
+                TaskState.Archived -> {
+                    inProgressFab.show()
+                    completeFab.show()
+                    archiveFab.isVisible = false
+                    inProgressTextView.isVisible = true
+                    completeTextView.isVisible = true
+                    archiveTextView.isVisible = false
+                }
             }
         }
     }
 
-    private fun setStateFabsVisibility(isVisible: Boolean) {
+    private fun hideTaskMenu() {
         binding {
-            changeStateFab.isVisible = isVisible
-            completeFab.isVisible = isVisible
-            archiveFab.isVisible = isVisible
+            inProgressTextView.isVisible = false
+            completeTextView.isVisible = false
+            archiveTextView.isVisible = false
+            inProgressFab.hide()
+            completeFab.hide()
+            archiveFab.hide()
         }
     }
 
@@ -217,6 +255,10 @@ class EditTaskFragment : BaseFragment<FragmentEditTaskBinding>(), View.OnClickLi
 //todo delete point
 //todo onbackpressed
 //todo last symbol
-//todo bts state
-//color icons
-// add checkpoints
+//todo bts state - in progress!
+//scroll to desk from edit
+//on back finish edit
+//change blue color
+//open links
+//points edit
+//click on create points list

@@ -1,8 +1,9 @@
 package com.kanbat.viewmodel
 
-import androidx.lifecycle.*
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.kanbat.model.data.Desk
-import com.kanbat.model.data.Point
 import com.kanbat.model.data.Task
 import com.kanbat.model.data.TaskState
 import com.kanbat.model.repository.DeskRepository
@@ -18,86 +19,87 @@ class EditTaskViewModel(
 ) : ViewModel() {
 
     var taskText: String = ""
-        set(value) {
-            field = value
-            validateTask()
-        }
 
-    private val deskFlow: StateFlow<Desk?> = deskRepository
+    private val deskState: StateFlow<Desk?> = deskRepository
         .getDeskById(deskId)
         .catch { }
         .stateIn(viewModelScope, SharingStarted.Eagerly, null)
-    val desk get() = deskFlow.filterNotNull()
+    val deskUiState get() = deskState.filterNotNull()
 
-    private val taskFlow: StateFlow<Task?> = taskRepository
+    private val taskState: StateFlow<Task?> = taskRepository
         .getTaskById(taskId)
         .catch { }
         .stateIn(viewModelScope, SharingStarted.Eagerly, null)
-    val task get() = taskFlow.filterNotNull()
+    val taskUiState
+        get() = taskState
+            .filterNotNull()
+            .map { task ->
+                val state = TaskState.getTaskStateByType(task.state)
+                val isVisible = isTaskMenuVisibleState.value.second
+                isTaskMenuVisibleState.value = Pair(state, isVisible)
+                task
+            }
 
-    private var isEnabledFlow = MutableStateFlow<Boolean>(false).apply { value = false }
-    val isEnabled get() = isEnabledFlow
+    private var isOnBackPressedState = MutableStateFlow(false)
+    val isOnBackPressedUiState
+        get() = isOnBackPressedState
+            .filter { it }
 
-    private var isTaskEditedFlow = MutableStateFlow<Boolean>(false).apply { value = false }
-    val isTaskEdited get() = isTaskEditedFlow
+    private var isEditModeState = MutableStateFlow(false)
+    val isEditModeUiState
+        get() = isEditModeState
 
-    private var isEditModeFlow = MutableStateFlow<Boolean>(false).apply { value = false }
-    val isEditMode get() = isEditModeFlow
+    private var isTaskMenuVisibleState: MutableStateFlow<Pair<TaskState, Boolean>> =
+        MutableStateFlow(Pair(TaskState.InProgress, false))
+    val isTaskMenuVisibleUiState get() = isTaskMenuVisibleState
 
-    private var isChangeStateModeFlow = MutableStateFlow<Boolean>(false).apply { value = false }
-    val isChangeStateMode get() = isChangeStateModeFlow
-
-    fun onEditTaskClicked(points: List<String>) {
-        viewModelScope.launch {
-            val result = taskRepository.addTask(
-                Task(
-                    id = taskId,
-                    deskId = deskId,
-                    title = "",
-                    text = taskText,
-                    state = TaskState.Created.state,
-                    priority = 0,
-                    points = points.filter { it.isNotEmpty() }
-                        .map { Point(0L, it, System.currentTimeMillis(), 0L) },
-                    timeCreatedAt = System.currentTimeMillis(),
-                    timeDoneAt = 0L
-                )
-            )
-            isTaskEdited.value = result > 0
+    fun onEditModeChanged() {
+        if (isEditModeState.value && taskText.isNotEmpty()) {
+            viewModelScope.launch {
+                isEditModeState.value = taskRepository.addTask(
+                    Task(
+                        id = taskId,
+                        deskId = deskId,
+                        title = "",
+                        text = taskText,
+                        state = TaskState.InProgress.state,
+                        priority = 0,
+                        timeCreatedAt = System.currentTimeMillis(),
+                        timeDoneAt = 0L
+                    )
+                ) == 0L
+            }
+        } else {
+            isEditModeState.value = true
         }
     }
 
-    fun onEditModeChanged(isEditMode: Boolean) {
-        isEditModeFlow.value = isEditMode
+    fun onTaskMenuClicked() {
+        val state = TaskState
+            .getTaskStateByType(taskState.value?.state ?: TaskState.InProgress.state)
+        val isVisible = !isTaskMenuVisibleState.value.second
+        isTaskMenuVisibleState.value = Pair(state, isVisible)
     }
 
-    fun onStateChangeClicked() {
-        isChangeStateModeFlow.value = !isChangeStateModeFlow.value
-    }
-
-    private fun validateTask() {
-        isEnabledFlow.value = taskText.isNotEmpty()
-    }
-
-    fun onCompleteTaskClicked() {
+    fun onChangeTaskStateClicked(taskState: TaskState) {
         viewModelScope.launch {
-            taskRepository.changeTaskState(taskId, TaskState.Completed.state)
+            taskRepository.changeTaskState(taskId, taskState.state)
         }
     }
 
-    fun onArchiveTaskClicked() {
+    fun onDeleteTaskClicked() {
         viewModelScope.launch {
-            taskRepository.changeTaskState(taskId, TaskState.Archived.state)
+            isOnBackPressedState.value = taskRepository.deleteTask(taskId)
         }
     }
 
-//    fun onBackAction(): Boolean {
-//        return if (isEditMode.value) {
-//            onEditModeChanged(false)
-//        } else {
-//            true
-//        }
-//    }
+    fun onBackAction() {
+        if (isEditModeState.value) {
+            isEditModeState.value = false
+        } else {
+            isOnBackPressedState.value = true
+        }
+    }
 
     class Factory(
         private val deskId: Long,

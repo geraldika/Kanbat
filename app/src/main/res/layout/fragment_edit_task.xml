@@ -31,6 +31,7 @@
                     android:id="@+id/backButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:paddingEnd="@dimen/size_8dp"
                     android:src="@drawable/ic_back"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -56,19 +57,16 @@
 
                 <ImageView
                     android:id="@+id/taskStateImageView"
-                    android:layout_width="@dimen/size_36dp"
-                    android:layout_height="@dimen/size_36dp"
-                    android:layout_marginStart="@dimen/size_16dp"
-                    android:layout_marginEnd="@dimen/size_16dp"
+                    android:layout_width="@dimen/size_18dp"
+                    android:layout_height="@dimen/size_18dp"
+                    android:layout_marginStart="@dimen/size_8dp"
                     android:src="@drawable/ic_task_state"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
-
         </androidx.appcompat.widget.Toolbar>
-
     </com.google.android.material.appbar.AppBarLayout>
 
     <ScrollView
@@ -92,95 +90,104 @@
                 style="@style/KanbatTheme.TitleTextInputStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/size_16dp"
-                android:imeOptions="actionNext"
+                android:layout_marginTop="@dimen/size_12dp"
+                android:imeOptions="flagNoEnterAction"
                 android:inputType="textAutoCorrect|textMultiLine|textAutoComplete"
+                android:lineSpacingExtra="@dimen/size_4dp"
                 android:paddingStart="0dp"
                 android:paddingEnd="0dp"
+                android:singleLine="false"
                 android:textColorHint="@color/textColorTertiary"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <FrameLayout
-                android:id="@+id/editTaskLayout"
+            <androidx.compose.ui.platform.ComposeView
+                android:id="@+id/composeView"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                app:layout_constraintBottom_toBottomOf="@+id/taskInputEditText"
-                app:layout_constraintEnd_toEndOf="@+id/taskInputEditText"
-                app:layout_constraintStart_toStartOf="@+id/taskInputEditText"
-                app:layout_constraintTop_toTopOf="@+id/taskInputEditText" />
-
-            <LinearLayout
-                android:id="@+id/pointsContainerLayout"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:clickable="false"
-                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/taskInputEditText" />
 
-            <TextView
-                android:id="@+id/addPointButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/size_24dp"
-                android:ellipsize="end"
-                android:fontFamily="@font/helvetica"
-                android:lines="1"
-                android:text="@string/str_add_points_to_check_list"
-                android:textColor="@color/colorIconsSecondary"
-                android:textSize="@dimen/textsize_14sp"
-                app:drawableEndCompat="@drawable/ic_add"
-                app:drawableTint="@color/colorIconsSecondary"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/pointsContainerLayout" />
-
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
-
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/completeFab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/size_24dp"
-        app:backgroundTint="@color/colorAccent"
+        app:backgroundTint="@color/colorCompleted"
         app:fabSize="normal"
-        app:layout_constraintBottom_toTopOf="@+id/archiveFab"
-        app:layout_constraintEnd_toEndOf="@+id/archiveFab"
-        app:layout_constraintStart_toStartOf="@+id/archiveFab"
-        app:srcCompat="@drawable/ic_done" />
+        app:layout_constraintBottom_toTopOf="@+id/inProgressFab"
+        app:layout_constraintEnd_toEndOf="@+id/inProgressFab"
+        app:layout_constraintStart_toStartOf="@+id/inProgressFab"
+        app:srcCompat="@drawable/ic_done"
+        app:tint="@color/colorWhite" />
 
     <TextView
         android:id="@+id/completeTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/size_8dp"
+        android:background="@drawable/background_task_state"
+        android:padding="@dimen/size_2dp"
         android:text="@string/str_complete_task_button"
+        android:textColor="@color/colorWhite"
         app:layout_constraintBottom_toBottomOf="@+id/completeFab"
         app:layout_constraintEnd_toStartOf="@+id/completeFab"
         app:layout_constraintTop_toTopOf="@+id/completeFab" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/inProgressFab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/size_24dp"
+        app:backgroundTint="@color/colorInProgress"
+        app:fabSize="normal"
+        app:layout_constraintBottom_toTopOf="@+id/archiveFab"
+        app:layout_constraintEnd_toEndOf="@+id/archiveFab"
+        app:layout_constraintStart_toStartOf="@+id/archiveFab"
+        app:srcCompat="@drawable/ic_done"
+        app:tint="@color/colorWhite" />
+
+    <TextView
+        android:id="@+id/inProgressTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/size_8dp"
+        android:background="@drawable/background_task_state"
+        android:padding="@dimen/size_2dp"
+        android:text="@string/str_in_progress_task_button"
+        android:textColor="@color/colorWhite"
+        app:layout_constraintBottom_toBottomOf="@+id/inProgressFab"
+        app:layout_constraintEnd_toStartOf="@+id/inProgressFab"
+        app:layout_constraintTop_toTopOf="@+id/inProgressFab" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/archiveFab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/size_24dp"
-        app:backgroundTint="@color/colorAccent"
+        app:backgroundTint="@color/colorArchived"
         app:fabSize="normal"
         app:layout_constraintBottom_toTopOf="@+id/changeStateFab"
         app:layout_constraintEnd_toEndOf="@+id/changeStateFab"
         app:layout_constraintStart_toStartOf="@+id/changeStateFab"
-        app:srcCompat="@drawable/ic_archive" />
+        app:srcCompat="@drawable/ic_archive"
+        app:tint="@color/colorWhite" />
 
     <TextView
         android:id="@+id/archiveTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/size_8dp"
+        android:background="@drawable/background_task_state"
+        android:padding="@dimen/size_2dp"
         android:text="@string/str_archive_task"
+        android:textColor="@color/colorWhite"
         app:layout_constraintBottom_toBottomOf="@+id/archiveFab"
         app:layout_constraintEnd_toStartOf="@+id/archiveFab"
         app:layout_constraintTop_toTopOf="@+id/archiveFab" />
@@ -196,5 +203,6 @@
         app:backgroundTint="@color/colorAccent"
         app:fabSize="normal"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="@color/colorWhite" />
 </androidx.constraintlayout.widget.ConstraintLayout>

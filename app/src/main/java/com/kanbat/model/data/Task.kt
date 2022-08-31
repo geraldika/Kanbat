@@ -21,8 +21,6 @@ data class Task(
     val state: Int,
     @SerializedName("priority")
     val priority: Int,
-    @SerializedName("points")
-    val points: List<Point>,
     @SerializedName("timeCreatedAt")
     val timeCreatedAt: Long,
     @SerializedName("timeDoneAt")
@@ -30,21 +28,33 @@ data class Task(
 )
 
 sealed class TaskState(val state: Int, @ColorRes val color: Int) {
-    object Created : TaskState(0, R.color.colorInProgress)
+    object InProgress : TaskState(0, R.color.colorInProgress)
     object Completed : TaskState(1, R.color.colorCompleted)
-    object Archived : TaskState(2, R.color.textColorSecondary)
+    object Archived : TaskState(2, R.color.colorArchived)
 
     companion object {
-        const val CREATED = 0
-        const val COMPLETED = 1
+        private const val IN_PROGRESS = 0
+        private const val COMPLETED = 1
         const val ARCHIVED = 2
 
         fun getTaskStateByType(type: Int): TaskState {
             return when (type) {
-                CREATED -> Created
+                IN_PROGRESS -> InProgress
                 COMPLETED -> Completed
                 else -> Archived
             }
         }
     }
 }
+
+//@Entity
+//data class MessageAndFulldiveUserComposite(
+//    @SerializedName("message")
+//    @Embedded
+//    val message: ChatMessage,
+//    @SerializedName("chatFulldiveUser")
+//    @Embedded
+//    val fulldiveUser: FulldiveUser?
+//)
+
+//MessageAndFulldiveUserComposite

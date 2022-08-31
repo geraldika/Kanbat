@@ -1,17 +1,28 @@
 <resources>
-    <string name="app_name">Kanbat</string>
     <string name="str_title_home">Kanbat</string>
     <string name="str_title_add_task">Add task</string>
     <string name="str_hint_input_task">Input task</string>
-    <string name="str_create_desk">Create new desk</string>
-    <string name="str_hint_input_desk">Input desk name..</string>
+    <string name="str_create_desk">Create new dashboard</string>
+    <string name="str_hint_input_desk">Input dashboard name..</string>
     <string name="str_create_button">Create</string>
-    <string name="str_desk_is_created">Desk is created!</string>
+    <string name="str_desk_is_created">Dashboard is created!</string>
     <string name="str_save_button">Save</string>
     <string name="str_create_check_list" >Create check list</string>
-    <string name="str_add_point">Please add point</string>
+    <string name="str_add_point">Add point</string>
     <string name="str_hint_edit_task">Task content</string>
     <string name="str_add_points_to_check_list">Add check point</string>
     <string name="str_complete_task_button">Complete</string>
+    <string name="str_in_progress_task_button">In progress</string>
     <string name="str_archive_task">Archive</string>
+    <string name="str_delete_task">Delete task</string>
+    <string name="str_delete_desk">Are you sure to delete dashboard?</string>
+    <string name="str_delete">Delete</string>
+    <string name="str_cancel">Cancel</string>
+    <string name="str_empty_desks_title">No dashboards yet</string>
+    <string name="str_empty_desks_disclamer">You can create dashboards and fill them with tasks, also monitor the progress of their implementation</string>
+    <string name="str_empty_tasks_title">No tasks yet</string>
+    <string name="str_empty_tasks_disclamer">You can create tasks, add checklists, and manage task statuses (perform them or add them to the archive until better times)</string>
+    <string name="str_filter_tasks_in_progress">In progress</string>
+    <string name="str_filter_tasks_completed">Completed</string>
+    <string name="str_filter_tasks_in_archived">Archived</string>
 </resources>

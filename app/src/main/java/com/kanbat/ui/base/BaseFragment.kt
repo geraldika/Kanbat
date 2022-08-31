@@ -1,7 +1,9 @@
 package com.kanbat.ui.base
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.MenuHost
@@ -19,6 +21,18 @@ abstract class BaseFragment<VB : ViewBinding> : Fragment(), MenuProvider {
 
     abstract fun getViewBinding(): VB
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val callback: OnBackPressedCallback =
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    onBackPressed()
+                }
+            }
+        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
+
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -35,7 +49,9 @@ abstract class BaseFragment<VB : ViewBinding> : Fragment(), MenuProvider {
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean = false
 
     protected open fun onBackPressed() {
-        findNavController().navigateUp()
+        val isCanGoBack = findNavController().navigateUp()
+        Log.d("TestB", "onBackPressed  $isCanGoBack $this")
+
     }
 
     protected fun binding(viewBinding: VB.() -> Unit) {

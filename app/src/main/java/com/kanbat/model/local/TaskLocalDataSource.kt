@@ -2,26 +2,40 @@ package com.kanbat.model.local
 
 import androidx.paging.PagingSource
 import com.kanbat.dao.KanbatDatabase
+import com.kanbat.model.TaskComposite
 import com.kanbat.model.data.Task
+import com.kanbat.model.data.TaskState
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class TaskLocalDataSource @Inject constructor(private val database: KanbatDatabase) {
 
-    private val taskDao = database.taskDao()
+    private val dao = database.taskDao()
 
-    suspend fun insertTask(task: Task) = taskDao.insert(task)
+    fun getAllTaskComposites(): PagingSource<Int, TaskComposite> = dao.getAllTaskComposites()
 
-    suspend fun changeTaskState(taskId: Long, state: Int) = taskDao.changeTaskState(taskId, state)
+    fun getTaskCompositesByDeskId(deskId: Long): PagingSource<Int, TaskComposite> = dao
+        .getTaskCompositesByDeskId(deskId)
 
-    fun getAllTasks(): Flow<List<Task>> = taskDao.getAllTasks()
+    fun getTaskCompositesByDeskIdAndState(
+        deskId: Long,
+        state: TaskState
+    ): PagingSource<Int, TaskComposite> {
+        return dao.getTaskCompositesByDeskIdAndState(deskId, state.state)
+    }
 
-    fun getTaskById(id: Long): Flow<Task> = taskDao.getTaskById(id)
+    suspend fun insertTask(task: Task) = dao.insert(task)
 
-    fun getTasksByDeskId(deskId: Long): PagingSource<Int, Task> = taskDao.getTasksByDeskId(deskId)
+    suspend fun changeTaskState(taskId: Long, state: Int) = dao.changeTaskState(taskId, state)
 
-    fun getTasks(): PagingSource<Int, Task> = taskDao.getTasks()
+    fun getAllTasks(): Flow<List<Task>> = dao.getAllTasks()
 
-    suspend fun deleteTask(task: Task) = taskDao.delete(task)
+    fun getTaskById(id: Long): Flow<Task> = dao.getTaskById(id)
+
+    fun getTasksByDeskId(deskId: Long): PagingSource<Int, Task> = dao.getTasksByDeskId(deskId)
+
+    fun getTasks(): PagingSource<Int, Task> = dao.getTasks()
+
+    suspend fun deleteTask(taskId: Long): Int = dao.deleteTaskById(taskId)
 
 }

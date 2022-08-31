@@ -2,21 +2,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/completeItemView"
-        android:icon="@drawable/ic_done"
-        android:title="Completed"
+        android:id="@+id/inProgressItemView"
+        android:title="@string/str_filter_tasks_in_progress"
         app:iconTint="@color/colorAccent"
         app:showAsAction="never" />
     <item
-        android:id="@+id/archiveItemView"
-        android:icon="@drawable/ic_done"
-        android:title="Archive"
+        android:id="@+id/completedTasksItemView"
+        android:title="@string/str_filter_tasks_completed"
         app:iconTint="@color/colorAccent"
         app:showAsAction="never" />
     <item
-        android:id="@+id/createItemView"
-        android:icon="@drawable/ic_done"
-        android:title="Recreate"
+        android:id="@+id/archivedTasksItemView"
+        android:title="@string/str_filter_tasks_in_archived"
         app:iconTint="@color/colorAccent"
         app:showAsAction="never" />
 </menu>

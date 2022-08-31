@@ -4,7 +4,7 @@ import android.graphics.PorterDuff
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.google.samples.gridtopager.databinding.LayoutTaskHolderBinding
-import com.kanbat.model.data.Task
+import com.kanbat.model.TaskComposite
 import com.kanbat.model.data.TaskState
 import com.kanbat.model.data.isDone
 import com.kanbat.utils.UiUtils
@@ -15,14 +15,15 @@ class TaskHolder(
     private val binding: LayoutTaskHolderBinding,
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(item: Task, onItemClickListener: ((Task) -> Unit)) {
+    fun bind(item: TaskComposite, onItemClickListener: ((TaskComposite) -> Unit)) {
         with(binding) {
-            val backgroundColor = UiUtils.generateColor(itemView.context, "${item.id}")
+            val task = item.task
+            val backgroundColor = UiUtils.generateColor(itemView.context, "${task.id}")
             containerLayout.setBackgroundColor(backgroundColor)
-            taskTextView.text = item.text
+            taskTextView.text = task.text
 
             taskStateView.setColorFilter(
-                itemView.context.color(TaskState.getTaskStateByType(item.state).color),
+                itemView.context.color(TaskState.getTaskStateByType(task.state).color),
                 PorterDuff.Mode.SRC_IN
             )
 

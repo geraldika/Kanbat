@@ -7,14 +7,14 @@ import javax.inject.Inject
 
 class DeskLocalDataSource @Inject constructor(database: KanbatDatabase) {
 
-    private val deskDao = database.deskDao()
+    private val dao = database.deskDao()
 
-    suspend fun insertDesk(desk: Desk) = deskDao.insert(desk)
+    suspend fun insertDesk(desk: Desk) = dao.insert(desk)
 
-    fun getAllDesks(): Flow<List<Desk>> = deskDao.getAllDesks()
+    fun getAllDesks(): Flow<List<Desk>> = dao.getAllDesks()
 
-    fun getDeskById(id: Long): Flow<Desk> = deskDao.getDeskById(id)
+    fun getDeskById(id: Long): Flow<Desk> = dao.getDeskById(id)
 
-    suspend fun deleteDesk(desk: Desk) = deskDao.delete(desk)
+    suspend fun deleteDesk(desk: Desk) = dao.delete(desk)
 
 }

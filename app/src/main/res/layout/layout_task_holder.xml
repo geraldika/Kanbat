@@ -26,7 +26,8 @@
             android:layout_width="@dimen/size_8dp"
             android:layout_height="@dimen/size_8dp"
             android:layout_marginStart="@dimen/size_8dp"
-            android:src="@drawable/ic_rectangle"
+            android:layout_marginBottom="@dimen/size_8dp"
+            android:src="@drawable/ic_task_state"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -41,7 +42,7 @@
             android:textSize="@dimen/textsize_14sp"
             app:layout_constraintEnd_toStartOf="@+id/taskStateView"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/taskStateView"
             tools:text="capture.condenastdigital.com" />
 
         <TextView

@@ -2,13 +2,19 @@ package com.kanbat.ui.desk
 
 import android.content.Context
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.samples.gridtopager.R
 import com.google.samples.gridtopager.databinding.FragmentDeskBinding
+import com.kanbat.model.data.TaskState
 import com.kanbat.model.repository.DeskRepository
 import com.kanbat.model.repository.TaskRepository
 import com.kanbat.ui.base.BaseFragment
@@ -48,23 +54,33 @@ class DeskFragment : BaseFragment<FragmentDeskBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding {
+            initToolbar(toolbar)
+
             val gridLayoutManager = StaggeredGridLayoutManager(
                 2,
                 StaggeredGridLayoutManager.VERTICAL
             )
             recyclerView.layoutManager = gridLayoutManager
             recyclerView.adapter = adapter
+
+            launch({
+                viewModel
+                    .taskItemsUiState
+                    .collectLatest { data ->
+                        adapter.submitData(data)
+                    }
+            })
+
+            adapter.addLoadStateListener { loadState ->
+                emptyTasksLayout.containerLayout.isVisible =
+                    loadState.source.refresh is LoadState.NotLoading &&
+                        loadState.append.endOfPaginationReached && adapter.itemCount < 1
+            }
         }
 
         launch({
             viewModel
-                .tasks
-                .collectLatest(adapter::submitData)
-        })
-
-        launch({
-            viewModel
-                .desk
+                .deckUiState
                 .collectLatest {
                     binding {
                         toolbarTitleView.text = it.title
@@ -74,7 +90,7 @@ class DeskFragment : BaseFragment<FragmentDeskBinding>() {
 
         launch({
             viewModel
-                .selectedTask
+                .selectedTaskUiState
                 .collectLatest { task ->
                     findNavController()
                         .navigate(
@@ -83,6 +99,28 @@ class DeskFragment : BaseFragment<FragmentDeskBinding>() {
                         )
                 }
         })
+    }
+
+    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+        menuInflater.inflate(R.menu.menu_filter_tasks, menu)
+    }
+
+    override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+        return when (menuItem.itemId) {
+            R.id.inProgressItemView -> {
+                viewModel.onFilterTasksClicked(TaskState.InProgress)
+                true
+            }
+            R.id.completedTasksItemView -> {
+                viewModel.onFilterTasksClicked(TaskState.Completed)
+                true
+            }
+            R.id.archivedTasksItemView -> {
+                viewModel.onFilterTasksClicked(TaskState.Archived)
+                true
+            }
+            else -> false
+        }
     }
 
     companion object {

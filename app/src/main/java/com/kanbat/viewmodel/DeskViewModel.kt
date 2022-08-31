@@ -1,8 +1,12 @@
 package com.kanbat.viewmodel
 
-import androidx.lifecycle.*
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
+import com.kanbat.model.TaskComposite
 import com.kanbat.model.data.Task
+import com.kanbat.model.data.TaskState
 import com.kanbat.model.repository.DeskRepository
 import com.kanbat.model.repository.TaskRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,15 +18,23 @@ class DeskViewModel(
     private val taskRepository: TaskRepository
 ) : ViewModel() {
 
-    private var deskFlow = deskRepository.getDeskById(deskId)
-    val desk get() = deskFlow
-    private var tasksFlow = taskRepository.getTasksByDeskId(deskId).cachedIn(viewModelScope)
-    val tasks get() = tasksFlow
-    private var selectedTaskFlow = MutableStateFlow<Task?>(value = null)
-    val selectedTask get() = selectedTaskFlow.filterNotNull()
+    private var deskState = deskRepository.getDeskById(deskId).filterNotNull()
+    val deckUiState get() = deskState
 
-    fun onTaskClicked(task: Task) {
-        selectedTaskFlow.value = task
+    private var taskItemsState = taskRepository.getTaskCompositesByDeskId(deskId)
+        .cachedIn(viewModelScope)
+        .filterNotNull()
+    val taskItemsUiState get() = taskItemsState
+
+    private var selectedTaskState = MutableStateFlow<Task?>(null)
+    val selectedTaskUiState get() = selectedTaskState.filterNotNull()
+
+    fun onTaskClicked(item: TaskComposite) {
+        selectedTaskState.value = item.task
+    }
+
+    fun onFilterTasksClicked(taskState: TaskState) {
+     //   getTaskCompositesByDeskIdAndState
     }
 
     class Factory(

@@ -53,13 +53,13 @@ class CreateDeskFragment : BaseDialogFragment<FragmentCreateDeskBinding>() {
         super.onViewCreated(view, savedInstanceState)
         binding {
             launch({
-                viewModel.isEnabled.collectLatest { isEnabled ->
+                viewModel.isDeskValidUiState.collectLatest { isEnabled ->
                     createDeskButton.isEnabled = isEnabled
                 }
             })
 
             launch({
-                viewModel.isDeskCreated.collectLatest { isDeskCreated ->
+                viewModel.isDeskCreatedUiState.collectLatest { isDeskCreated ->
                     if (isDeskCreated) {
                         requireActivity().toast(R.string.str_desk_is_created)
                         onBackPressed()

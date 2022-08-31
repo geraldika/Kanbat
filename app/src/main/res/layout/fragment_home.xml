@@ -14,16 +14,39 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <include
+        android:id="@+id/emptyDeskLayout"
+        layout="@layout/layout_empty_desks"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/tabLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ImageView
-        android:id="@+id/createDeskButton"
-        android:layout_width="@dimen/size_48dp"
+        android:id="@+id/settingsButton"
+        android:layout_width="@dimen/size_32dp"
         android:layout_height="@dimen/size_48dp"
         android:background="@color/colorWhite"
-        android:padding="@dimen/size_12dp"
-        android:src="@drawable/ic_add_desk"
+        android:paddingStart="@dimen/size_8dp"
+        android:paddingEnd="@dimen/size_2dp"
+        android:src="@drawable/ic_settings"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:tint="@color/colorIconsPrimary" />
+        app:tint="@color/textColorTertiary" />
+
+    <ImageView
+        android:id="@+id/createDeskButton"
+        android:layout_width="@dimen/size_32dp"
+        android:layout_height="@dimen/size_48dp"
+        android:background="@color/colorWhite"
+        android:padding="@dimen/size_4dp"
+        android:src="@drawable/ic_add_desk"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/settingsButton"
+        app:tint="@color/textColorTertiary" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
@@ -42,6 +65,15 @@
         app:tabSelectedTextColor="@color/colorAccent"
         app:tabTextColor="@color/textColorTertiary" />
 
+    <View
+        android:layout_width="0dp"
+        android:layout_height="@dimen/size_1dp"
+        android:alpha="0.2"
+        android:background="@color/textColorTertiary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tabLayout" />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addTaskButton"
         android:layout_width="wrap_content"
@@ -53,6 +85,7 @@
         app:backgroundTint="@color/colorAccent"
         app:fabSize="normal"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="@color/colorWhite" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

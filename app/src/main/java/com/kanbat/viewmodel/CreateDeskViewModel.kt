@@ -1,6 +1,8 @@
 package com.kanbat.viewmodel
 
-import androidx.lifecycle.*
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.kanbat.model.data.Desk
 import com.kanbat.model.repository.DeskRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,20 +17,20 @@ class CreateDeskViewModel(private val deskRepository: DeskRepository) :
             validateDesk()
         }
 
-    private var isEnabledFlow = MutableStateFlow<Boolean>(false).apply { value = false }
-    val isEnabled get() = isEnabledFlow
+    private var isDeskValidState = MutableStateFlow(false)
+    val isDeskValidUiState get() = isDeskValidState
 
-    private var isDeckCreatedFlow = MutableStateFlow<Boolean>(false).apply { value = false }
-    val isDeskCreated get() = isDeckCreatedFlow
+    private var isDeckCreatedState = MutableStateFlow(false)
+    val isDeskCreatedUiState get() = isDeckCreatedState
 
     fun onCreateDeskClicked() {
         viewModelScope.launch {
-            isDeckCreatedFlow.value = deskRepository.insertTask(Desk(0L, deskTitle)) > 0
+            isDeckCreatedState.value = deskRepository.insertTask(Desk(0L, deskTitle)) > 0
         }
     }
 
     private fun validateDesk() {
-        isEnabledFlow.value = deskTitle.isNotEmpty()
+        isDeskValidState.value = deskTitle.isNotEmpty()
     }
 
     class Factory(

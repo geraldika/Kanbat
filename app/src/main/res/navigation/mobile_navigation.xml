@@ -7,7 +7,8 @@
     <fragment
         android:id="@+id/navigation_home"
         android:name="com.kanbat.ui.home.HomeFragment"
-        android:label="@string/str_title_home" />
+        android:label="@string/str_title_home"
+        app:defaultNavHost="false" />
 
     <fragment
         android:id="@+id/navigation_add_task"

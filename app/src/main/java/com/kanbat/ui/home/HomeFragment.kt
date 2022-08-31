@@ -46,7 +46,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         super.onViewCreated(view, savedInstanceState)
         binding {
             addTaskButton.isVisible = false
-
             viewPager.adapter = viewPagerAdapter
             viewPager.isSaveEnabled = false
             TabLayoutMediator(
@@ -54,14 +53,22 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                 viewPager
             ) { tab, position ->
                 tab.text = viewPagerAdapter.items[position].title
+                tab.view.setOnLongClickListener {
+                    DeleteDeskDialog.show(requireActivity()) {
+                        viewModel.onDeleteDeskClicked(
+                            viewPagerAdapter.items.get(position)
+                        )
+                    }
+                    true
+                }
             }.apply {
                 attach()
             }
             viewPager.post { viewPager.currentItem = selectedPageIndex }
 
             addTaskButton.setOnClickListener {
-                setFragmentResultListener(AddTaskFragment.REQUEST_KEY) { _, result ->
-                    (result[AddTaskFragment.KEY_DESK_ID] as? Long)?.let { deskId ->
+                setFragmentResultListener(REQUEST_KEY) { _, result ->
+                    (result[KEY_DESK_ID] as? Long)?.let { deskId ->
                         val pageIndex = deskId.toInt() - 1
                         selectedPageIndex = if (pageIndex < viewPagerAdapter.items.size) {
                             pageIndex
@@ -70,13 +77,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                         }
                     }
                 }
-                val b =
-                    AddTaskFragment.createArgument(viewPagerAdapter.items[viewPager.currentItem].id)
 
                 this@HomeFragment.findNavController().navigate(
                     R.id.navigation_add_task,
                     AddTaskFragment.createArgument(viewPagerAdapter.items[viewPager.currentItem].id)
                 )
+            }
+            settingsButton.setOnClickListener {
+                //todo settings, about, donate
             }
 
             createDeskButton.setOnClickListener {
@@ -84,8 +92,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             }
 
             launch({
-                viewModel.desks.collectLatest { desks ->
+                viewModel.desksUiState.collectLatest { desks ->
                     binding {
+                        emptyDeskLayout.containerLayout.isVisible = desks.isEmpty()
                         viewPagerAdapter.items = desks
                         binding?.viewPager?.setCurrentItem(0, true)
                         addTaskButton.isVisible = desks.isNotEmpty()
@@ -102,19 +111,24 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         super.onDestroyView()
     }
 
+    companion object {
+        const val KEY_DESK_ID = "KEY_DESK_ID"
+        const val REQUEST_KEY = "TASK_REQUEST_KEY"
+    }
+
     @dagger.Module
     class Module
 
 }
 
-//todo delete desk
-//todo delete task
-//todo delete point
-//todo points view
-//filter by states, filter icons
+//todo filter by states, filter icons
+//archive -> recreate buttons flow
 //pin code finger
 //ads
-// icons process + filter
 //add -edit dialog fragment animation
 //build variants
-//card colors depends on status
+//notifications
+//license
+//open links
+//desk settings: change order & delete desk
+//proguard

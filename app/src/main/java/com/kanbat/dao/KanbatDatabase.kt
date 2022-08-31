@@ -2,7 +2,6 @@ package com.kanbat.dao
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
 import com.kanbat.model.data.Desk
 import com.kanbat.model.data.Point
 import com.kanbat.model.data.Task
@@ -14,10 +13,9 @@ import com.kanbat.model.data.Task
         Point::class
     ],
     version = 1,
-    exportSchema = true
+    exportSchema = false
 )
 
-@TypeConverters(RoomTypeConverters::class)
 abstract class KanbatDatabase : RoomDatabase() {
 
     companion object {

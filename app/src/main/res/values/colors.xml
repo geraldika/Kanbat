@@ -24,8 +24,9 @@
     <color name="colorIconsSecondary">#adb5bd</color>
     <color name="colorInactiveIcons">#ced4da</color>
 
-    <color name="colorCompleted">#6a994e</color>
-    <color name="colorInProgress">#38a3a5</color>
+    <color name="colorCompleted">#90be6d</color>
+    <color name="colorInProgress">#0077b6</color>
+    <color name="colorArchived">#f4a261</color>
 
     <color name="colorWhite">#ffffff</color>
 
