@@ -1,9 +1,23 @@
+/*
+ * Copyright 2022 Yulia Batova
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.kanbat.ui.base
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
-import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.MenuHost
@@ -21,18 +35,6 @@ abstract class BaseFragment<VB : ViewBinding> : Fragment(), MenuProvider {
 
     abstract fun getViewBinding(): VB
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val callback: OnBackPressedCallback =
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    onBackPressed()
-                }
-            }
-        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
-
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -49,9 +51,7 @@ abstract class BaseFragment<VB : ViewBinding> : Fragment(), MenuProvider {
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean = false
 
     protected open fun onBackPressed() {
-        val isCanGoBack = findNavController().navigateUp()
-        Log.d("TestB", "onBackPressed  $isCanGoBack $this")
-
+        findNavController().navigateUp()
     }
 
     protected fun binding(viewBinding: VB.() -> Unit) {
