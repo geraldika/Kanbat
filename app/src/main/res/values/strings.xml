@@ -1,3 +1,19 @@
+<!--
+  ~ Copyright 2022 Yulia Batova
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
 <resources>
     <string name="str_title_home">Kanbat</string>
     <string name="str_title_add_task">Add task</string>
@@ -19,7 +35,7 @@
     <string name="str_delete">Delete</string>
     <string name="str_cancel">Cancel</string>
     <string name="str_empty_desks_title">No dashboards yet</string>
-    <string name="str_empty_desks_disclamer">You can create dashboards and fill them with tasks, also monitor the progress of their implementation</string>
+    <string name="str_empty_desks_disclamer">You can create dashboards and fill them with tasks, also monitor the progress of its implementation</string>
     <string name="str_empty_tasks_title">No tasks yet</string>
     <string name="str_empty_tasks_disclamer">You can create tasks, add checklists, and manage task statuses (perform them or add them to the archive until better times)</string>
     <string name="str_filter_tasks_in_progress">In progress</string>

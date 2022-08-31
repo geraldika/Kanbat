@@ -1,4 +1,19 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright 2022 Yulia Batova
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -124,7 +139,7 @@
         app:layout_constraintBottom_toTopOf="@+id/inProgressFab"
         app:layout_constraintEnd_toEndOf="@+id/inProgressFab"
         app:layout_constraintStart_toStartOf="@+id/inProgressFab"
-        app:srcCompat="@drawable/ic_done"
+        app:srcCompat="@drawable/ic_complete"
         app:tint="@color/colorWhite" />
 
     <TextView
@@ -133,7 +148,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/size_8dp"
         android:background="@drawable/background_task_state"
-        android:padding="@dimen/size_2dp"
+        android:padding="@dimen/size_4dp"
         android:text="@string/str_complete_task_button"
         android:textColor="@color/colorWhite"
         app:layout_constraintBottom_toBottomOf="@+id/completeFab"
@@ -150,7 +165,7 @@
         app:layout_constraintBottom_toTopOf="@+id/archiveFab"
         app:layout_constraintEnd_toEndOf="@+id/archiveFab"
         app:layout_constraintStart_toStartOf="@+id/archiveFab"
-        app:srcCompat="@drawable/ic_done"
+        app:srcCompat="@drawable/ic_in_progress"
         app:tint="@color/colorWhite" />
 
     <TextView
@@ -159,7 +174,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/size_8dp"
         android:background="@drawable/background_task_state"
-        android:padding="@dimen/size_2dp"
+        android:padding="@dimen/size_4dp"
         android:text="@string/str_in_progress_task_button"
         android:textColor="@color/colorWhite"
         app:layout_constraintBottom_toBottomOf="@+id/inProgressFab"
@@ -185,7 +200,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/size_8dp"
         android:background="@drawable/background_task_state"
-        android:padding="@dimen/size_2dp"
+        android:padding="@dimen/size_4dp"
         android:text="@string/str_archive_task"
         android:textColor="@color/colorWhite"
         app:layout_constraintBottom_toBottomOf="@+id/archiveFab"
