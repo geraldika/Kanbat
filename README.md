@@ -5,3 +5,5 @@ Tasks Manager. You can create dashboards and fill them with tasks, also monitor 
 
 ![Alt text](https://i.postimg.cc/CMPzByCQ/Screenshot-20220831-175758-Kanbat-Debug.jpg "Screenshort 2")
 
+![Alt text](https://i.postimg.cc/FRKT9dQR/Screenshot-20220831-175338-Kanbat-Debug.jpg "Screenshort 2")
+
