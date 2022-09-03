@@ -49,7 +49,7 @@ abstract class BaseDialogFragment<VB : ViewBinding> : DialogFragment() {
         super.onDestroyView()
     }
 
-    protected fun onBackPressed() {
+    protected fun onBackAction() {
         findNavController().popBackStack()
     }
 

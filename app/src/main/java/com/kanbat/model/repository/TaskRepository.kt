@@ -23,7 +23,9 @@ import com.kanbat.model.TaskComposite
 import com.kanbat.model.data.Task
 import com.kanbat.model.data.TaskState
 import com.kanbat.model.local.TaskLocalDataSource
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
 class TaskRepository @Inject constructor(
@@ -50,6 +52,7 @@ class TaskRepository @Inject constructor(
                 localDataSource.getTaskCompositesByDeskId(deskId)
             }
         ).flow
+            .flowOn(Dispatchers.IO)
     }
 
     fun getTaskCompositesByDeskIdAndState(
@@ -66,6 +69,7 @@ class TaskRepository @Inject constructor(
                 localDataSource.getTaskCompositesByDeskIdAndState(deskId, state)
             }
         ).flow
+            .flowOn(Dispatchers.IO)
     }
 
     fun getAllTaskComposites(): Flow<PagingData<TaskComposite>> {
@@ -73,17 +77,18 @@ class TaskRepository @Inject constructor(
             config = PagingConfig(
                 pageSize = PAGE_SIZE,
                 initialLoadSize = PAGE_SIZE,
-                enablePlaceholders = true
+                enablePlaceholders = false
             ),
             pagingSourceFactory = {
                 localDataSource.getAllTaskComposites()
             }
         ).flow
+            .flowOn(Dispatchers.IO)
     }
 
     suspend fun deleteTask(taskId: Long): Boolean = localDataSource.deleteTask(taskId) > 0
 
     companion object {
-        private const val PAGE_SIZE = 10
+        private const val PAGE_SIZE = 15
     }
 }

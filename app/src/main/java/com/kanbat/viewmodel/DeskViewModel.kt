@@ -27,6 +27,7 @@ import com.kanbat.model.repository.DeskRepository
 import com.kanbat.model.repository.TaskRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flatMapLatest
 
 class DeskViewModel(
     private val deskId: Long,
@@ -34,13 +35,23 @@ class DeskViewModel(
     private val taskRepository: TaskRepository
 ) : ViewModel() {
 
+    private val tasksFilterState: MutableStateFlow<TaskState> = MutableStateFlow(TaskState.None)
+    private val taskItemsState = tasksFilterState.flatMapLatest { filter ->
+        when (filter) {
+            is TaskState.None -> {
+                taskRepository.getTaskCompositesByDeskId(deskId)
+            }
+            else -> {
+                taskRepository.getTaskCompositesByDeskIdAndState(deskId, filter)
+            }
+        }.cachedIn(viewModelScope)
+            .filterNotNull()
+    }
+    val taskItemsUiState get() = taskItemsState
+
     private var deskState = deskRepository.getDeskById(deskId).filterNotNull()
     val deckUiState get() = deskState
 
-    private var taskItemsState = taskRepository.getTaskCompositesByDeskId(deskId)
-        .cachedIn(viewModelScope)
-        .filterNotNull()
-    val taskItemsUiState get() = taskItemsState
 
     private var selectedTaskState = MutableStateFlow<Task?>(null)
     val selectedTaskUiState get() = selectedTaskState.filterNotNull()
@@ -50,7 +61,7 @@ class DeskViewModel(
     }
 
     fun onFilterTasksClicked(taskState: TaskState) {
-     //   getTaskCompositesByDeskIdAndState
+        tasksFilterState.value = taskState
     }
 
     class Factory(

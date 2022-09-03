@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.kanbat.ui.edit
+package com.kanbat.ui.addtask
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
@@ -49,7 +49,7 @@ import com.kanbat.utils.HelveticaFont
 
 @ExperimentalFoundationApi
 @Composable
-fun EditPointView(
+fun AddPointsView(
     index: Int,
     pointItem: PointItem,
     onUpdatePointClicked: (PointItem) -> Unit,

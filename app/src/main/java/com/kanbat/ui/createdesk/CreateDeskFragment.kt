@@ -22,11 +22,14 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import androidx.core.os.bundleOf
+import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.ViewModelProvider
 import com.google.samples.gridtopager.R
 import com.google.samples.gridtopager.databinding.FragmentCreateDeskBinding
 import com.kanbat.model.repository.DeskRepository
 import com.kanbat.ui.base.BaseDialogFragment
+import com.kanbat.ui.home.HomeFragment
 import com.kanbat.utils.toast
 import com.kanbat.viewmodel.CreateDeskViewModel
 import dagger.android.support.AndroidSupportInjection
@@ -75,17 +78,21 @@ class CreateDeskFragment : BaseDialogFragment<FragmentCreateDeskBinding>() {
             })
 
             launch({
-                viewModel.isDeskCreatedUiState.collectLatest { isDeskCreated ->
-                    if (isDeskCreated) {
+                viewModel.createdDeskIdUiState.collectLatest { deskId ->
+                    if (deskId > 0) {
                         requireActivity().toast(R.string.str_desk_is_created)
-                        onBackPressed()
+                        setFragmentResult(
+                            HomeFragment.REQUEST_KEY,
+                            bundleOf(HomeFragment.KEY_DESK_ID to deskId)
+                        )
+                        onBackAction()
                     }
                 }
             })
 
             deskNameInputEditText.addTextChangedListener(addDeskNameWatcher)
             createDeskButton.setOnClickListener { viewModel.onCreateDeskClicked() }
-            backButton.setOnClickListener { onBackPressed() }
+            backButton.setOnClickListener { onBackAction() }
         }
     }
 

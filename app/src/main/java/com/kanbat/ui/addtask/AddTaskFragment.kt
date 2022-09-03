@@ -79,17 +79,16 @@ class AddTaskFragment : BaseFragment<FragmentAddTaskBinding>() {
                 MaterialTheme {
                     AddPointsView(
                         viewModel = viewModel,
-                        onBackAction = ::onBackPressed,
-                        onAddTaskAction = ::onAddTaskAction
+                        onAddTaskAction = ::onBackPressed
                     )
                 }
             }
         }
     }
 
-    private fun onAddTaskAction() {
+    override fun onBackPressed() {
         setFragmentResult(REQUEST_KEY, bundleOf(HomeFragment.KEY_DESK_ID to deskId))
-        onBackPressed()
+        super.onBackPressed()
     }
 
     companion object {

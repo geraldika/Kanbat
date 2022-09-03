@@ -36,12 +36,12 @@ class CreateDeskViewModel(private val deskRepository: DeskRepository) :
     private var isDeskValidState = MutableStateFlow(false)
     val isDeskValidUiState get() = isDeskValidState
 
-    private var isDeckCreatedState = MutableStateFlow(false)
-    val isDeskCreatedUiState get() = isDeckCreatedState
+    private var createdDeskIdState = MutableStateFlow(0L)
+    val createdDeskIdUiState get() = createdDeskIdState
 
     fun onCreateDeskClicked() {
         viewModelScope.launch {
-            isDeckCreatedState.value = deskRepository.insertTask(Desk(0L, deskTitle)) > 0
+            createdDeskIdState.value = deskRepository.insertTask(Desk(0L, deskTitle))
         }
     }
 

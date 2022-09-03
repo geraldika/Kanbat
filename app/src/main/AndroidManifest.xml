@@ -30,6 +30,7 @@
         android:theme="@style/KanbatTheme">
         <activity
             android:name="com.kanbat.ui.KanbatActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

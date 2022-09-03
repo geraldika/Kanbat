@@ -17,6 +17,7 @@
 package com.kanbat.model.data
 
 import androidx.annotation.ColorRes
+import androidx.annotation.StringRes
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
@@ -43,10 +44,11 @@ data class Task(
     val timeDoneAt: Long
 )
 
-sealed class TaskState(val state: Int, @ColorRes val color: Int) {
-    object InProgress : TaskState(0, R.color.colorInProgress)
-    object Completed : TaskState(1, R.color.colorCompleted)
-    object Archived : TaskState(2, R.color.colorArchived)
+sealed class TaskState(val state: Int, @ColorRes val color: Int, @StringRes val title: Int) {
+    object InProgress : TaskState(0, R.color.colorInProgress, R.string.str_filter_tasks_in_progress)
+    object Completed : TaskState(1, R.color.colorCompleted, R.string.str_filter_tasks_completed)
+    object Archived : TaskState(2, R.color.colorArchived, R.string.str_filter_tasks_in_archived)
+    object None : TaskState(0, 0, 0)
 
     companion object {
         private const val IN_PROGRESS = 0
@@ -57,20 +59,9 @@ sealed class TaskState(val state: Int, @ColorRes val color: Int) {
             return when (type) {
                 IN_PROGRESS -> InProgress
                 COMPLETED -> Completed
-                else -> Archived
+                ARCHIVED -> Archived
+                else -> None
             }
         }
     }
 }
-
-//@Entity
-//data class MessageAndFulldiveUserComposite(
-//    @SerializedName("message")
-//    @Embedded
-//    val message: ChatMessage,
-//    @SerializedName("chatFulldiveUser")
-//    @Embedded
-//    val fulldiveUser: FulldiveUser?
-//)
-
-//MessageAndFulldiveUserComposite

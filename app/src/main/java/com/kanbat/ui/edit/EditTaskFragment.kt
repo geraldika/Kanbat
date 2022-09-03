@@ -42,10 +42,7 @@ import com.kanbat.model.repository.PointRepository
 import com.kanbat.model.repository.TaskRepository
 import com.kanbat.ui.base.BaseFragment
 import com.kanbat.ui.home.HomeFragment
-import com.kanbat.utils.color
-import com.kanbat.utils.hideKeyboard
-import com.kanbat.utils.or
-import com.kanbat.utils.showKeyboard
+import com.kanbat.utils.*
 import com.kanbat.viewmodel.EditPointsViewModel
 import com.kanbat.viewmodel.EditTaskViewModel
 import dagger.android.support.AndroidSupportInjection
@@ -88,6 +85,8 @@ class EditTaskFragment : BaseFragment<FragmentEditTaskBinding>(), View.OnClickLi
             viewModel.taskText = s.toString().trim()
         }
     }
+
+    private var taskState: TaskState = TaskState.InProgress
 
     override fun getViewBinding() = FragmentEditTaskBinding.inflate(layoutInflater)
 
@@ -152,11 +151,12 @@ class EditTaskFragment : BaseFragment<FragmentEditTaskBinding>(), View.OnClickLi
                     taskStateImageView.setColorFilter(
                         requireActivity().color(TaskState.getTaskStateByType(task.state).color)
                     )
+                    taskState = TaskState.getTaskStateByType(task.state)
                 }
             })
 
             launch({
-                viewModel.isOnBackPressedUiState.collectLatest {
+                viewModel.isOnFinishEditUiState.collectLatest {
                     setFragmentResult(
                         HomeFragment.REQUEST_KEY,
                         bundleOf(HomeFragment.KEY_DESK_ID to deskId)
@@ -170,6 +170,7 @@ class EditTaskFragment : BaseFragment<FragmentEditTaskBinding>(), View.OnClickLi
             completeFab.setOnClickListener(this@EditTaskFragment)
             inProgressFab.setOnClickListener(this@EditTaskFragment)
             archiveFab.setOnClickListener(this@EditTaskFragment)
+            taskStateImageView.setOnClickListener(this@EditTaskFragment)
             backButton.setOnClickListener(this@EditTaskFragment)
         }
     }
@@ -181,8 +182,14 @@ class EditTaskFragment : BaseFragment<FragmentEditTaskBinding>(), View.OnClickLi
             R.id.inProgressFab -> viewModel.onChangeTaskStateClicked(TaskState.InProgress)
             R.id.completeFab -> viewModel.onChangeTaskStateClicked(TaskState.Completed)
             R.id.archiveFab -> viewModel.onChangeTaskStateClicked(TaskState.Archived)
+            R.id.taskStateImageView -> onTaskStateClicked()
             R.id.backButton -> onBackPressed()
         }
+    }
+
+    override fun onPause() {
+        viewModel.onEditModeChanged()
+        super.onPause()
     }
 
     override fun onBackPressed() {
@@ -248,6 +255,10 @@ class EditTaskFragment : BaseFragment<FragmentEditTaskBinding>(), View.OnClickLi
             completeFab.hide()
             archiveFab.hide()
         }
+    }
+
+    private fun onTaskStateClicked() {
+        requireActivity().toast(taskState.title)
     }
 
     companion object {

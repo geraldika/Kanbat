@@ -58,7 +58,12 @@ class DeskFragment : BaseFragment<FragmentDeskBinding>() {
         )[DeskViewModel::class.java]
     }
 
-    private val adapter by lazy { TasksAdapter(onItemClickListener = viewModel::onTaskClicked) }
+    private val adapter by lazy {
+        TasksAdapter(
+            deskId,
+            onItemClickListener = viewModel::onTaskClicked
+        )
+    }
 
     override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)
@@ -70,8 +75,6 @@ class DeskFragment : BaseFragment<FragmentDeskBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding {
-            initToolbar(toolbar)
-
             val gridLayoutManager = StaggeredGridLayoutManager(
                 2,
                 StaggeredGridLayoutManager.VERTICAL
@@ -79,13 +82,7 @@ class DeskFragment : BaseFragment<FragmentDeskBinding>() {
             recyclerView.layoutManager = gridLayoutManager
             recyclerView.adapter = adapter
 
-            launch({
-                viewModel
-                    .taskItemsUiState
-                    .collectLatest { data ->
-                        adapter.submitData(data)
-                    }
-            })
+            launch({ viewModel.taskItemsUiState.collectLatest(adapter::submitData) })
 
             adapter.addLoadStateListener { loadState ->
                 emptyTasksLayout.containerLayout.isVisible =
@@ -99,7 +96,7 @@ class DeskFragment : BaseFragment<FragmentDeskBinding>() {
                 .deckUiState
                 .collectLatest {
                     binding {
-                        toolbarTitleView.text = it.title
+                        toolbar.title = it.title
                     }
                 }
         })
@@ -115,6 +112,14 @@ class DeskFragment : BaseFragment<FragmentDeskBinding>() {
                         )
                 }
         })
+    }
+
+    //todo find out how to fix
+    override fun onResume() {
+        super.onResume()
+        binding {
+            initToolbar(toolbar)
+        }
     }
 
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
