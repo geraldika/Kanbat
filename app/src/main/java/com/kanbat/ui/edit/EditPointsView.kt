@@ -44,6 +44,8 @@ fun EditPointsView(
 ) {
     val points = viewModel.pointsUiState.collectAsState()
     onEditModeChangeListener.invoke(points.value.any { it.isEditMode })
+    val notEditablePoints = points.value.filterNot { it.isEditMode }
+
     val lazyListState: LazyListState = rememberLazyListState()
     Box {
         LazyColumn(
@@ -57,14 +59,18 @@ fun EditPointsView(
             itemsIndexed(points.value) { index, pointItem ->
                 if (pointItem.isEditMode) {
                     EditPointView(
-                        index = index,
+                        index = if (pointItem.point.id == 0L) points.value.size else index + 1,
                         pointItem = pointItem,
                         onUpdatePointClicked = viewModel::onUpdatePointClicked,
                         onDeletePointClicked = viewModel::onDeletePointClicked
                     )
                 } else {
                     PointView(
-                        index = index,
+                        index = if (points.value.any { it.point.id == 0L }) {
+                            notEditablePoints.indexOfFirst { it.point.id == pointItem.point.id }
+                        } else {
+                            index
+                        },
                         pointItem = pointItem,
                         onDonePointClicked = viewModel::onDonePointClicked,
                         onEditPointClicked = viewModel::onEditPointClicked

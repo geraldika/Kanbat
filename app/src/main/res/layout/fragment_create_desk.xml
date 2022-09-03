@@ -47,7 +47,6 @@
         android:id="@+id/deskInputLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/size_24dp"
         android:background="@android:color/transparent"
         android:hint="@string/str_hint_input_desk"
         android:textColorHint="@color/textColorTertiary"

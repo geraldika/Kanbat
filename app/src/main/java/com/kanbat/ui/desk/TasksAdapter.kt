@@ -24,6 +24,7 @@ import com.google.samples.gridtopager.databinding.LayoutTaskHolderBinding
 import com.kanbat.model.TaskComposite
 
 class TasksAdapter(
+   val  deskId: Long,
     private val onItemClickListener: ((TaskComposite) -> Unit)
 ) : PagingDataAdapter<TaskComposite, TaskHolder>(TASKS_COMPARATOR) {
 
@@ -46,7 +47,10 @@ class TasksAdapter(
             override fun areItemsTheSame(oldItem: TaskComposite, newItem: TaskComposite): Boolean =
                 oldItem.task.id == newItem.task.id
 
-            override fun areContentsTheSame(oldItem: TaskComposite, newItem: TaskComposite): Boolean =
+            override fun areContentsTheSame(
+                oldItem: TaskComposite,
+                newItem: TaskComposite
+            ): Boolean =
                 oldItem == newItem
         }
     }

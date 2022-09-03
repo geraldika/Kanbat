@@ -16,6 +16,7 @@
 
 package com.kanbat.ui.addtask
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
@@ -46,7 +47,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.google.samples.gridtopager.R
-import com.kanbat.ui.edit.EditPointView
 import com.kanbat.ui.point.PointView
 import com.kanbat.viewmodel.AddTaskViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -58,14 +58,18 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 @Composable
 fun AddPointsView(
     viewModel: AddTaskViewModel,
-    onBackAction: (() -> Unit),
     onAddTaskAction: (() -> Unit)
 ) {
     val points = viewModel.pointsUiState.collectAsState()
     val isEnabled = viewModel.isTaskValidUiState.collectAsState().value
     val isTaskAdded = viewModel.isTaskAddedUiState.collectAsState().value
+    val notEditablePoints = points.value.filterNot { it.isEditMode }
 
     if (isTaskAdded) onAddTaskAction.invoke()
+
+    BackHandler {
+        viewModel.onAddTaskClicked()
+    }
 
     val lazyListState: LazyListState = rememberLazyListState()
     ConstraintLayout(
@@ -175,7 +179,6 @@ fun AddPointsView(
             state = lazyListState,
             modifier = Modifier
                 .padding(start = 16.dp, top = 0.dp, end = 16.dp, bottom = 16.dp)
-                //  .fillMaxSize()
                 .focusRequester(focusRequester)
                 .constrainAs(pointsRef) {
                     start.linkTo(parent.start)
@@ -189,17 +192,17 @@ fun AddPointsView(
                     onCreatePointClicked = { viewModel.onCreatePointClicked() }
                 )
             }
-            itemsIndexed(points.value) { index, pointItem ->
+            itemsIndexed(points.value) { _, pointItem ->
                 if (pointItem.isEditMode) {
-                    EditPointView(
-                        index = index,
+                    AddPointsView(
+                        index = points.value.size,
                         pointItem = pointItem,
                         onUpdatePointClicked = viewModel::onUpdatePointClicked,
                         onDeletePointClicked = viewModel::onDeletePointClicked
                     )
                 } else {
                     PointView(
-                        index = index,
+                        index = notEditablePoints.indexOfFirst { it.point.id == pointItem.point.id },
                         pointItem = pointItem,
                         onDonePointClicked = viewModel::onDonePointClicked,
                         onEditPointClicked = viewModel::onEditPointClicked

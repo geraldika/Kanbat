@@ -89,7 +89,6 @@ class AddTaskViewModel(
                 })
                 isTaskAddedState.value = taskId > 0L
             } else {
-                //todo in the future add popup
                 isTaskAddedState.value = true
             }
         }
@@ -123,7 +122,7 @@ class AddTaskViewModel(
     }
 
     fun onCreatePointClicked() {
-        if (idEditPoint == 0L) { //todo bool
+        if (idEditPoint == 0L) {
             idEditPoint = 1L
             pointsState.value = pointsState.value
                 .map { item ->

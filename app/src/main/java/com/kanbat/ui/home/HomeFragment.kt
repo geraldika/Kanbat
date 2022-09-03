@@ -49,7 +49,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     }
     private val viewPagerAdapter by lazy { DeskViewPagerAdapter(activity as AppCompatActivity) }
 
-    private var selectedPageIndex = 0
+    private var selectedDeskId = 0L
 
     override fun getViewBinding() = FragmentHomeBinding.inflate(layoutInflater)
 
@@ -80,31 +80,23 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             }.apply {
                 attach()
             }
-            viewPager.post { viewPager.currentItem = selectedPageIndex }
+            viewPager.post { viewPager.currentItem = getSelectedAdapterPosition() }
 
             addTaskButton.setOnClickListener {
-                setFragmentResultListener(REQUEST_KEY) { _, result ->
-                    (result[KEY_DESK_ID] as? Long)?.let { deskId ->
-                        val pageIndex = deskId.toInt() - 1
-                        selectedPageIndex = if (pageIndex < viewPagerAdapter.items.size) {
-                            pageIndex
-                        } else {
-                            0
-                        }
-                    }
-                }
-
+                setOnSelectedDeskListener()
                 this@HomeFragment.findNavController().navigate(
                     R.id.navigation_add_task,
                     AddTaskFragment.createArgument(viewPagerAdapter.items[viewPager.currentItem].id)
                 )
             }
-            settingsButton.setOnClickListener {
-                //todo settings, about, donate
-            }
 
             createDeskButton.setOnClickListener {
+                setOnSelectedDeskListener()
                 this@HomeFragment.findNavController().navigate(R.id.navigation_create_desk)
+            }
+
+            settingsButton.setOnClickListener {
+                //todo settings, about, donate
             }
 
             launch({
@@ -112,7 +104,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                     binding {
                         emptyDeskLayout.containerLayout.isVisible = desks.isEmpty()
                         viewPagerAdapter.items = desks
-                        binding?.viewPager?.setCurrentItem(0, true)
+                        binding?.viewPager?.setCurrentItem(getSelectedAdapterPosition(), true)
                         addTaskButton.isVisible = desks.isNotEmpty()
                     }
                 }
@@ -127,6 +119,19 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         super.onDestroyView()
     }
 
+    private fun getSelectedAdapterPosition(): Int {
+        val position = viewPagerAdapter.items.indexOfFirst { it.id == selectedDeskId }
+        return 0.coerceAtLeast(position)
+    }
+
+    private fun setOnSelectedDeskListener() {
+        setFragmentResultListener(REQUEST_KEY) { _, result ->
+            (result[KEY_DESK_ID] as? Long)?.let { deskId ->
+                selectedDeskId = deskId
+            }
+        }
+    }
+
     companion object {
         const val KEY_DESK_ID = "KEY_DESK_ID"
         const val REQUEST_KEY = "TASK_REQUEST_KEY"
@@ -134,7 +139,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
     @dagger.Module
     class Module
-
 }
 
 //todo filter by states, filter icons

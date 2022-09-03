@@ -34,7 +34,7 @@ class EditTaskViewModel(
     private val taskRepository: TaskRepository
 ) : ViewModel() {
 
-    var taskText: String = ""
+    var taskText: String = "" //todo temporary decision - refactor it on compose
 
     private val deskState: StateFlow<Desk?> = deskRepository
         .getDeskById(deskId)
@@ -56,9 +56,9 @@ class EditTaskViewModel(
                 task
             }
 
-    private var isOnBackPressedState = MutableStateFlow(false)
-    val isOnBackPressedUiState
-        get() = isOnBackPressedState
+    private var isOnFinishEditState = MutableStateFlow(false)
+    val isOnFinishEditUiState
+        get() = isOnFinishEditState
             .filter { it }
 
     private var isEditModeState = MutableStateFlow(false)
@@ -105,7 +105,7 @@ class EditTaskViewModel(
 
     fun onDeleteTaskClicked() {
         viewModelScope.launch {
-            isOnBackPressedState.value = taskRepository.deleteTask(taskId)
+            isOnFinishEditState.value = taskRepository.deleteTask(taskId)
         }
     }
 
@@ -113,7 +113,7 @@ class EditTaskViewModel(
         if (isEditModeState.value) {
             isEditModeState.value = false
         } else {
-            isOnBackPressedState.value = true
+            isOnFinishEditState.value = true
         }
     }
 

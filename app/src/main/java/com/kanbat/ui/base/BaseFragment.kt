@@ -74,9 +74,7 @@ abstract class BaseFragment<VB : ViewBinding> : Fragment(), MenuProvider {
     protected open fun initToolbar(toolbar: Toolbar) {
         val activity = activity as AppCompatActivity
         activity.setSupportActionBar(toolbar)
-        activity.supportActionBar?.let { actionBar ->
-            actionBar.setHomeButtonEnabled(true)
-        }
+        activity.supportActionBar?.setHomeButtonEnabled(true)
     }
 }
 
